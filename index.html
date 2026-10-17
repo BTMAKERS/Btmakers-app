@@ -428,7 +428,7 @@ for(const item of categories) {
 
       Promise.all([
         ShopifyBuy.UI.onReady(client),
-        client.collection.fetchWithProducts(collectionId,{productsFirst:250})
+        client.collection.fetchWithProducts(collectionId))
       ]).then(function(results) {
         const ui=results[0];
         const collection=results[1];
