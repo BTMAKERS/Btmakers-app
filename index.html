@@ -97,7 +97,7 @@ footer{text-align:center;color:#777;font-size:12px;padding:12px 0 24px}
 <script>
 const shop='https://www.btmakers.fr';
 const categories=[
-{icon:'☕',name:'Mugs personnalisés',desc:'Pour offrir ou se faire plaisir.',url:shop},
+{icon:'☕',image:'mug-btmakers.png',name:'Mugs personnalisés',desc:'Créez votre mug avec votre propre design.',url:shop},
 {icon:'👕',name:'T-shirts personnalisés',desc:'Des créations à votre image.',url:shop},
 {icon:'🎨',name:'Stickers',desc:'Pour décorer et personnaliser.',url:shop},
 {icon:'🧲',name:'Magnets',desc:'Des souvenirs à afficher.',url:shop},
@@ -110,7 +110,15 @@ const card=document.createElement('article');
 card.className='product';
 const art=document.createElement('div');
 art.className='art';
-art.textContent=item.icon;
+if(item.image){
+  const img=document.createElement('img');
+  img.src=item.image;
+  img.alt=item.name;
+  img.style.cssText='width:100%;height:100%;object-fit:cover';
+  art.appendChild(img);
+}else{
+  art.textContent=item.icon;
+}
 art.setAttribute('aria-hidden','true');
 const inside=document.createElement('div');
 inside.className='inside';
