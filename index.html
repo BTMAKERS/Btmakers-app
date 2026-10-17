@@ -132,7 +132,16 @@ link.href=item.url;
 link.target='_blank';
 link.rel='noopener noreferrer';
 link.textContent='Voir sur la boutique ↗';
-inside.append(h,p,link);
+inside.append(h,p);
+if(item.name==='Mugs personnalisés'){
+  const perso=document.createElement('a');
+  perso.className='btn';
+  perso.href='personnaliser-mug.html';
+  perso.textContent='🎨 Personnaliser mon mug';
+  perso.style.cssText='background:linear-gradient(90deg,#9418ce,#e90083);color:white;margin-bottom:10px;text-align:center';
+  inside.append(perso);
+}
+inside.append(link);
 card.append(art,inside);
 grid.append(card);
 }
