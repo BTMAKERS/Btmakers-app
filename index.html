@@ -10,9 +10,12 @@
 <link rel="icon" href="logo-btmakers.png" type="image/png">
 <style>
 /* Afficher seulement 6 stickers au départ */
+/* Masquer les stickers après le sixième */
 #stickers-apercu:not(.tout-afficher)
-.shopify-buy__product:nth-child(n+7) {
+.shopify-buy__collection-products
+.shopify-buy__product:nth-of-type(n+7) {
   display: none !important;
+}
 }
 
 /* Bouton Voir tous les stickers */
