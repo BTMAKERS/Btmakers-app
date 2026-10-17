@@ -42,15 +42,23 @@ header h1 {
 header p {margin:0}
 .ligne {
   height:5px;
-  background:linear-gradient(90deg,var(--violet),var(--rose),#ff3150);
+  background:linear-gradient(
+    90deg,var(--violet),var(--rose),#ff3150
+  );
 }
 main {
   max-width:1000px;
   margin:auto;
   padding:20px 16px;
 }
-.intro {text-align:center;padding:12px 0 20px}
-.intro p {color:#666;line-height:1.5}
+.intro {
+  text-align:center;
+  padding:12px 0 20px;
+}
+.intro p {
+  color:#666;
+  line-height:1.5;
+}
 h2 {font-size:24px}
 .grille {
   display:grid;
@@ -77,7 +85,10 @@ h2 {font-size:24px}
   object-fit:cover;
 }
 .contenu {padding:13px}
-.contenu h3 {font-size:15px;margin:0 0 10px}
+.contenu h3 {
+  font-size:15px;
+  margin:0 0 10px;
+}
 .contenu p {
   font-size:13px;
   color:#666;
@@ -94,13 +105,24 @@ h2 {font-size:24px}
   font-size:13px;
   font-weight:bold;
   color:white;
-  background:linear-gradient(90deg,var(--violet),var(--rose));
+  background:linear-gradient(
+    90deg,var(--violet),var(--rose)
+  );
   cursor:pointer;
 }
+.bouton:disabled {
+  cursor:wait;
+  opacity:.65;
+}
 .section {margin-top:35px}
-.description {color:#666;font-size:14px;line-height:1.5}
+.description {
+  color:#666;
+  font-size:14px;
+  line-height:1.5;
+}
 
-/* Les 6 stickers sélectionnés */
+/* SIX STICKERS À LA UNE */
+
 #stickers-selection {
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -141,9 +163,12 @@ h2 {font-size:24px}
   margin:0 0 12px;
   min-height:22px;
 }
-.sticker-info .bouton {font-size:12px}
+.sticker-info .bouton {
+  font-size:12px;
+}
 
-/* Catalogue Shopify masqué au départ */
+/* CATALOGUE COMPLET */
+
 #catalogue-complet[hidden] {
   display:none!important;
 }
@@ -154,7 +179,9 @@ h2 {font-size:24px}
   padding:17px;
   border:0;
   border-radius:14px;
-  background:linear-gradient(90deg,var(--violet),var(--rose));
+  background:linear-gradient(
+    90deg,var(--violet),var(--rose)
+  );
   color:white;
   font-size:17px;
   font-weight:bold;
@@ -172,7 +199,10 @@ h2 {font-size:24px}
   padding:20px;
   box-shadow:0 4px 18px #00000010;
 }
-.panneau p {color:#555;line-height:1.6}
+.panneau p {
+  color:#555;
+  line-height:1.6;
+}
 .panneau a {overflow-wrap:anywhere}
 .navigation {
   position:fixed;
@@ -200,8 +230,12 @@ footer {
   margin:35px 0 10px;
 }
 @media(min-width:650px) {
-  .grille {grid-template-columns:repeat(3,1fr)}
-  #stickers-selection {grid-template-columns:repeat(3,1fr)}
+  .grille {
+    grid-template-columns:repeat(3,1fr);
+  }
+  #stickers-selection {
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 </style>
 </head>
@@ -220,19 +254,28 @@ footer {
 
 <section class="intro">
   <h2>Bienvenue chez BTMAKERS</h2>
-  <p>Mugs, t-shirts, stickers, magnets et cadeaux personnalisés.</p>
-  <a href="#catalogue" class="bouton">Découvrir nos produits ↓</a>
+  <p>
+    Mugs, t-shirts, stickers, magnets
+    et cadeaux personnalisés.
+  </p>
+  <a href="#catalogue" class="bouton">
+    Découvrir nos produits ↓
+  </a>
 </section>
 
 <section id="catalogue">
   <h2>🛍️ Notre catalogue</h2>
-  <p class="description">Découvrez nos différentes créations.</p>
+  <p class="description">
+    Découvrez nos différentes créations.
+  </p>
 
   <div class="grille">
 
     <article class="carte">
       <div class="illustration">
-        <img src="mug-btmakers.png" alt="Mug personnalisé"
+        <img
+          src="mug-btmakers.png"
+          alt="Mug personnalisé"
           onerror="this.remove();this.parentElement.textContent='☕'">
       </div>
       <div class="contenu">
@@ -303,7 +346,6 @@ footer {
 </section>
 
 <section class="section" id="stickers">
-
   <h2>🎨 Nos stickers</h2>
   <p class="description">
     Découvrez nos 6 modèles à la une.
@@ -326,7 +368,6 @@ footer {
     </p>
     <div id="collection-component-1792258001547"></div>
   </div>
-
 </section>
 
 <section class="section" id="personnalisation">
@@ -336,7 +377,8 @@ footer {
       Vous avez une photo, un prénom ou un design
       à personnaliser ? Contactez-nous !
     </p>
-    <a class="bouton"
+    <a
+      class="bouton"
       href="mailto:btmakers2026@outlook.fr?subject=Personnalisation%20BTMAKERS">
       Demander une personnalisation
     </a>
@@ -373,6 +415,7 @@ footer {
 </nav>
 
 <script>
+
 /* LES 6 STICKERS CHOISIS */
 
 const stickersChoisis=[
@@ -384,7 +427,9 @@ const stickersChoisis=[
   'lot-de-6-stickers-st-16'
 ];
 
-const selection=document.getElementById('stickers-selection');
+const selection=document.getElementById(
+  'stickers-selection'
+);
 
 const cartes=new Map();
 
@@ -410,32 +455,40 @@ stickersChoisis.forEach(function(handle) {
 
   const prix=document.createElement('p');
   prix.className='sticker-prix';
-  prix.textContent='';
 
-  const achat=document.createElement('a');
+  const achat=document.createElement('button');
   achat.className='bouton';
-  achat.href='https://btmakers.fr/products/'+handle;
-  achat.target='_blank';
-  achat.rel='noopener noreferrer';
-  achat.textContent='Voir et acheter ↗';
+  achat.type='button';
+  achat.textContent='Chargement…';
+  achat.disabled=true;
 
   info.append(titre,prix,achat);
   carte.append(photo,info);
   selection.appendChild(carte);
 
-  cartes.set(handle,{photo,titre,prix});
+  cartes.set(handle,{
+    photo,
+    titre,
+    prix,
+    achat
+  });
 });
 
-/* BOUTON VOIR TOUS LES STICKERS */
+/* AFFICHER LE CATALOGUE COMPLET */
 
 const boutonTous=document.getElementById('voir-tous');
-const catalogueComplet=document.getElementById('catalogue-complet');
+const catalogueComplet=document.getElementById(
+  'catalogue-complet'
+);
 
 boutonTous.addEventListener('click',function() {
   const ouvrir=catalogueComplet.hidden;
 
   catalogueComplet.hidden=!ouvrir;
-  boutonTous.setAttribute('aria-expanded',String(ouvrir));
+  boutonTous.setAttribute(
+    'aria-expanded',
+    String(ouvrir)
+  );
 
   boutonTous.textContent=ouvrir
     ? 'Voir moins de stickers ↑'
@@ -449,28 +502,49 @@ boutonTous.addEventListener('click',function() {
   }
 });
 
-/* CHARGEMENT DE SHOPIFY */
+/* SHOPIFY */
 
 (function() {
+
   const sdkURL=
     'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
+  const domaine='0chexn-mc.myshopify.com';
+  const token='89752ee985127238f6dc732f133c4e3b';
+
+  let panierShopify=null;
+
+  function ouvrirFiche(handle) {
+    window.location.href=
+      'https://btmakers.fr/products/'+handle;
+  }
+
   function lancer() {
+
     const client=ShopifyBuy.buildClient({
-      domain:'0chexn-mc.myshopify.com',
-      storefrontAccessToken:'89752ee985127238f6dc732f133c4e3b'
+      domain:domaine,
+      storefrontAccessToken:token
     });
 
-    /* Récupérer les photos et prix des 6 modèles */
+    /* GARDER LE CHARGEMENT DES PHOTOS ET PRIX */
 
     stickersChoisis.forEach(async function(handle) {
+
+      const elements=cartes.get(handle);
+
       try {
-        const produit=await client.product.fetchByHandle(handle);
+        const produit=await client.product.fetchByHandle(
+          handle
+        );
 
-        if(!produit) return;
-
-        const elements=cartes.get(handle);
-        if(!elements) return;
+        if(!produit) {
+          elements.achat.disabled=false;
+          elements.achat.textContent='Voir et acheter ↗';
+          elements.achat.onclick=function() {
+            ouvrirFiche(handle);
+          };
+          return;
+        }
 
         if(produit.images && produit.images.length) {
           const image=document.createElement('img');
@@ -487,6 +561,7 @@ boutonTous.addEventListener('click',function() {
 
         if(produit.variants && produit.variants.length) {
           const montant=produit.variants[0].price;
+
           const valeur=typeof montant==='object'
             ? montant.amount
             : montant;
@@ -499,22 +574,102 @@ boutonTous.addEventListener('click',function() {
               }).format(Number(valeur));
           }
         }
+
+        const variante=produit.variants.find(function(v) {
+          return v.available!==false;
+        });
+
+        if(!variante) {
+          elements.achat.textContent='Indisponible';
+          elements.achat.disabled=true;
+          return;
+        }
+
+        elements.achat.disabled=false;
+        elements.achat.textContent='Ajouter au panier 🛒';
+
+        elements.achat.addEventListener(
+          'click',
+          async function() {
+
+            if(
+              !panierShopify ||
+              typeof panierShopify.addVariant!=='function'
+            ) {
+              ouvrirFiche(handle);
+              return;
+            }
+
+            elements.achat.disabled=true;
+            elements.achat.textContent='Ajout en cours…';
+
+            try {
+
+              await panierShopify.addVariant(
+                variante,
+                1
+              );
+
+              elements.achat.textContent=
+                '✓ Ajouté au panier';
+
+            } catch(erreur) {
+
+              console.error(
+                'Erreur ajout panier',
+                erreur
+              );
+
+              elements.achat.textContent=
+                'Voir et acheter ↗';
+
+              ouvrirFiche(handle);
+
+            } finally {
+
+              setTimeout(function() {
+                elements.achat.disabled=false;
+                elements.achat.textContent=
+                  'Ajouter au panier 🛒';
+              },1200);
+
+            }
+          }
+        );
+
       } catch(erreur) {
-        console.warn('Aperçu indisponible :',handle);
+
+        console.warn(
+          'Aperçu indisponible',
+          handle,
+          erreur
+        );
+
+        elements.achat.disabled=false;
+        elements.achat.textContent='Voir et acheter ↗';
+        elements.achat.onclick=function() {
+          ouvrirFiche(handle);
+        };
       }
     });
 
-    /* Collection complète avec panier Shopify */
+    /* CATALOGUE SHOPIFY ORIGINAL */
 
     ShopifyBuy.UI.onReady(client).then(function(ui) {
+
       return ui.createComponent('collection',{
+
         id:'686474854734',
+
         node:document.getElementById(
           'collection-component-1792258001547'
         ),
+
         moneyFormat:
           '%E2%82%AC%7B%7Bamount_with_comma_separator%7D%7D',
+
         options:{
+
           product:{
             styles:{
               product:{
@@ -527,13 +682,16 @@ boutonTous.addEventListener('click',function() {
               },
               button:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'}
+                ':hover':{
+                  'background-color':'#da1af3'
+                }
               }
             },
             text:{
               button:'Ajouter au panier'
             }
           },
+
           productSet:{
             styles:{
               products:{
@@ -543,6 +701,7 @@ boutonTous.addEventListener('click',function() {
               }
             }
           },
+
           modalProduct:{
             contents:{
               img:false,
@@ -553,19 +712,25 @@ boutonTous.addEventListener('click',function() {
             styles:{
               button:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'}
+                ':hover':{
+                  'background-color':'#da1af3'
+                }
               }
             },
             text:{
               button:'Ajouter au panier'
             }
           },
+
           option:{},
+
           cart:{
             styles:{
               button:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'}
+                ':hover':{
+                  'background-color':'#da1af3'
+                }
               }
             },
             text:{
@@ -573,33 +738,83 @@ boutonTous.addEventListener('click',function() {
               button:'Passer commande'
             }
           },
+
           toggle:{
             styles:{
               toggle:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'}
+                ':hover':{
+                  'background-color':'#da1af3'
+                }
               }
             }
           }
         }
       });
+
+    }).then(function() {
+
+      /* RÉCUPÉRER LE PANIER EXISTANT */
+
+      ShopifyBuy.UI.onReady(client).then(function(ui) {
+
+        function chercherPanier() {
+
+          if(
+            ui.components &&
+            ui.components.cart &&
+            ui.components.cart[0]
+          ) {
+            panierShopify=ui.components.cart[0];
+          }
+        }
+
+        chercherPanier();
+
+        const intervalle=setInterval(function() {
+          chercherPanier();
+
+          if(panierShopify) {
+            clearInterval(intervalle);
+          }
+        },500);
+
+        setTimeout(function() {
+          clearInterval(intervalle);
+        },15000);
+
+      });
+
     }).catch(function(erreur) {
-      console.error('Erreur catalogue Shopify :',erreur);
+
+      console.error(
+        'Erreur catalogue Shopify',
+        erreur
+      );
+
     });
   }
 
   if(window.ShopifyBuy && window.ShopifyBuy.UI) {
+
     lancer();
+
   } else {
+
     const script=document.createElement('script');
     script.src=sdkURL;
     script.async=true;
     script.onload=lancer;
+
     script.onerror=function() {
-      console.error('Impossible de charger Shopify');
+      console.error(
+        'Impossible de charger Shopify'
+      );
     };
+
     document.head.appendChild(script);
   }
+
 })();
 </script>
 
