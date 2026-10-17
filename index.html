@@ -110,10 +110,6 @@ h2 {font-size:24px}
   );
   cursor:pointer;
 }
-.bouton:disabled {
-  cursor:wait;
-  opacity:.65;
-}
 .section {margin-top:35px}
 .description {
   color:#666;
@@ -121,7 +117,7 @@ h2 {font-size:24px}
   line-height:1.5;
 }
 
-/* SIX STICKERS À LA UNE */
+/* SIX STICKERS */
 
 #stickers-selection {
   display:grid;
@@ -133,6 +129,7 @@ h2 {font-size:24px}
   border-radius:16px;
   overflow:hidden;
   box-shadow:0 4px 18px #00000012;
+  min-width:0;
 }
 .sticker-photo {
   width:100%;
@@ -148,9 +145,7 @@ h2 {font-size:24px}
   height:100%;
   object-fit:contain;
 }
-.sticker-placeholder {
-  font-size:44px;
-}
+.sticker-placeholder {font-size:44px}
 .sticker-info {padding:12px}
 .sticker-info h3 {
   font-size:14px;
@@ -163,8 +158,23 @@ h2 {font-size:24px}
   margin:0 0 12px;
   min-height:22px;
 }
-.sticker-info .bouton {
+.sticker-achat {
+  width:100%;
+  min-height:45px;
+}
+.sticker-achat .shopify-buy-frame {
+  margin:0!important;
+  max-width:100%!important;
+}
+.sticker-achat iframe {
+  max-width:100%!important;
+}
+.sticker-erreur {
+  display:none;
+  color:#777;
   font-size:12px;
+  text-align:center;
+  margin-top:7px;
 }
 
 /* CATALOGUE COMPLET */
@@ -346,6 +356,7 @@ footer {
 </section>
 
 <section class="section" id="stickers">
+
   <h2>🎨 Nos stickers</h2>
   <p class="description">
     Découvrez nos 6 modèles à la une.
@@ -368,6 +379,7 @@ footer {
     </p>
     <div id="collection-component-1792258001547"></div>
   </div>
+
 </section>
 
 <section class="section" id="personnalisation">
@@ -416,7 +428,7 @@ footer {
 
 <script>
 
-/* LES 6 STICKERS CHOISIS */
+/* LES SIX MODÈLES CHOISIS */
 
 const stickersChoisis=[
   'lot-de-6-stickers-st-31',
@@ -433,7 +445,10 @@ const selection=document.getElementById(
 
 const cartes=new Map();
 
+/* CRÉATION DES SIX CARTES */
+
 stickersChoisis.forEach(function(handle) {
+
   const numero=handle.split('-').pop().toUpperCase();
 
   const carte=document.createElement('article');
@@ -456,13 +471,20 @@ stickersChoisis.forEach(function(handle) {
   const prix=document.createElement('p');
   prix.className='sticker-prix';
 
-  const achat=document.createElement('button');
-  achat.className='bouton';
-  achat.type='button';
-  achat.textContent='Chargement…';
-  achat.disabled=true;
+  const achat=document.createElement('div');
+  achat.className='sticker-achat';
 
-  info.append(titre,prix,achat);
+  const attente=document.createElement('p');
+  attente.style.cssText=
+    'font-size:12px;color:#777;text-align:center';
+  attente.textContent='Chargement…';
+
+  achat.appendChild(attente);
+
+  const erreur=document.createElement('p');
+  erreur.className='sticker-erreur';
+
+  info.append(titre,prix,achat,erreur);
   carte.append(photo,info);
   selection.appendChild(carte);
 
@@ -470,21 +492,25 @@ stickersChoisis.forEach(function(handle) {
     photo,
     titre,
     prix,
-    achat
+    achat,
+    erreur
   });
 });
 
-/* AFFICHER LE CATALOGUE COMPLET */
+/* VOIR TOUS LES STICKERS */
 
 const boutonTous=document.getElementById('voir-tous');
+
 const catalogueComplet=document.getElementById(
   'catalogue-complet'
 );
 
 boutonTous.addEventListener('click',function() {
+
   const ouvrir=catalogueComplet.hidden;
 
   catalogueComplet.hidden=!ouvrir;
+
   boutonTous.setAttribute(
     'aria-expanded',
     String(ouvrir)
@@ -500,6 +526,7 @@ boutonTous.addEventListener('click',function() {
       block:'start'
     });
   }
+
 });
 
 /* SHOPIFY */
@@ -510,13 +537,269 @@ boutonTous.addEventListener('click',function() {
     'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
   const domaine='0chexn-mc.myshopify.com';
+
   const token='89752ee985127238f6dc732f133c4e3b';
 
-  let panierShopify=null;
+  const moneyFormat=
+    '%E2%82%AC%7B%7Bamount_with_comma_separator%7D%7D';
 
-  function ouvrirFiche(handle) {
-    window.location.href=
-      'https://btmakers.fr/products/'+handle;
+  function afficherSecours(handle) {
+
+    const elements=cartes.get(handle);
+
+    if(!elements) return;
+
+    elements.achat.replaceChildren();
+
+    const lien=document.createElement('a');
+
+    lien.className='bouton';
+    lien.href='https://btmakers.fr/products/'+handle;
+    lien.target='_blank';
+    lien.rel='noopener noreferrer';
+    lien.textContent='Voir et acheter ↗';
+
+    elements.achat.appendChild(lien);
+  }
+
+  function afficherProduit(handle,produit) {
+
+    const elements=cartes.get(handle);
+
+    if(!elements || !produit) return;
+
+    if(produit.images && produit.images.length) {
+
+      const image=document.createElement('img');
+
+      image.src=produit.images[0].src;
+      image.alt=produit.title;
+      image.loading='lazy';
+
+      elements.photo.replaceChildren(image);
+    }
+
+    if(produit.title) {
+      elements.titre.textContent=produit.title;
+    }
+
+    if(produit.variants && produit.variants.length) {
+
+      const montant=produit.variants[0].price;
+
+      const valeur=typeof montant==='object'
+        ? montant.amount
+        : montant;
+
+      if(
+        valeur!==undefined &&
+        valeur!==null &&
+        Number.isFinite(Number(valeur))
+      ) {
+
+        elements.prix.textContent=
+          new Intl.NumberFormat('fr-FR',{
+            style:'currency',
+            currency:'EUR'
+          }).format(Number(valeur));
+
+      }
+    }
+  }
+
+  /* BOUTON OFFICIEL SHOPIFY */
+
+  function optionsBouton() {
+
+    return {
+
+      product:{
+
+        contents:{
+          img:false,
+          title:false,
+          price:false,
+          description:false,
+          options:false,
+          quantity:false,
+          button:true,
+          buttonWithQuantity:false
+        },
+
+        buttonDestination:'cart',
+
+        styles:{
+
+          product:{
+            'margin':'0',
+            'padding':'0',
+            'width':'100%',
+            'max-width':'100%',
+
+            '@media (min-width: 601px)':{
+              'max-width':'100%',
+              'margin-left':'0',
+              'margin-bottom':'0'
+            }
+          },
+
+          button:{
+            'background-color':'#9418ce',
+            'color':'#ffffff',
+            'border-radius':'11px',
+            'font-size':'12px',
+            'font-weight':'bold',
+            'width':'100%',
+            'padding':'13px 4px',
+            ':hover':{
+              'background-color':'#e90083'
+            },
+            ':focus':{
+              'background-color':'#e90083'
+            }
+          }
+        },
+
+        text:{
+          button:'Ajouter au panier 🛒',
+          outOfStock:'Indisponible'
+        }
+      },
+
+      modalProduct:{
+        contents:{
+          img:false,
+          imgWithCarousel:true,
+          button:false,
+          buttonWithQuantity:true
+        },
+        text:{
+          button:'Ajouter au panier'
+        }
+      },
+
+      option:{},
+
+      cart:{
+        styles:{
+          button:{
+            'background-color':'#800f8f',
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        },
+        text:{
+          total:'Sous-total',
+          button:'Passer commande'
+        }
+      },
+
+      toggle:{
+        styles:{
+          toggle:{
+            'background-color':'#800f8f'
+          }
+        }
+      }
+
+    };
+  }
+
+  /* OPTIONS DU CATALOGUE COMPLET */
+
+  function optionsCollection() {
+
+    return {
+
+      product:{
+
+        styles:{
+
+          product:{
+            '@media (min-width: 601px)':{
+              'max-width':'calc(25% - 20px)',
+              'margin-left':'20px',
+              'margin-bottom':'50px',
+              'width':'calc(25% - 20px)'
+            }
+          },
+
+          button:{
+            'background-color':'#800f8f',
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        },
+
+        text:{
+          button:'Ajouter au panier'
+        }
+      },
+
+      productSet:{
+        styles:{
+          products:{
+            '@media (min-width: 601px)':{
+              'margin-left':'-20px'
+            }
+          }
+        }
+      },
+
+      modalProduct:{
+
+        contents:{
+          img:false,
+          imgWithCarousel:true,
+          button:false,
+          buttonWithQuantity:true
+        },
+
+        styles:{
+          button:{
+            'background-color':'#800f8f',
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        },
+
+        text:{
+          button:'Ajouter au panier'
+        }
+      },
+
+      option:{},
+
+      cart:{
+        styles:{
+          button:{
+            'background-color':'#800f8f',
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        },
+
+        text:{
+          total:'Sous-total',
+          button:'Passer commande'
+        }
+      },
+
+      toggle:{
+        styles:{
+          toggle:{
+            'background-color':'#800f8f',
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        }
+      }
+    };
   }
 
   function lancer() {
@@ -526,274 +809,158 @@ boutonTous.addEventListener('click',function() {
       storefrontAccessToken:token
     });
 
-    /* GARDER LE CHARGEMENT DES PHOTOS ET PRIX */
+    /*
+      PHOTOS ET PRIX :
+      Chargement indépendant des boutons.
+    */
 
-    stickersChoisis.forEach(async function(handle) {
+    const produits=new Map();
 
-      const elements=cartes.get(handle);
+    const chargements=stickersChoisis.map(
+      async function(handle) {
 
-      try {
-        const produit=await client.product.fetchByHandle(
-          handle
-        );
+        try {
 
-        if(!produit) {
-          elements.achat.disabled=false;
-          elements.achat.textContent='Voir et acheter ↗';
-          elements.achat.onclick=function() {
-            ouvrirFiche(handle);
-          };
-          return;
-        }
+          const produit=
+            await client.product.fetchByHandle(handle);
 
-        if(produit.images && produit.images.length) {
-          const image=document.createElement('img');
-          image.src=produit.images[0].src;
-          image.alt=produit.title;
-          image.loading='lazy';
-
-          elements.photo.replaceChildren(image);
-        }
-
-        if(produit.title) {
-          elements.titre.textContent=produit.title;
-        }
-
-        if(produit.variants && produit.variants.length) {
-          const montant=produit.variants[0].price;
-
-          const valeur=typeof montant==='object'
-            ? montant.amount
-            : montant;
-
-          if(valeur!==undefined && valeur!==null) {
-            elements.prix.textContent=
-              new Intl.NumberFormat('fr-FR',{
-                style:'currency',
-                currency:'EUR'
-              }).format(Number(valeur));
+          if(produit) {
+            produits.set(handle,produit);
+            afficherProduit(handle,produit);
           }
-        }
 
-        const variante=produit.variants.find(function(v) {
-          return v.available!==false;
+          return produit;
+
+        } catch(erreur) {
+
+          console.warn(
+            'Erreur photo ou prix :',
+            handle,
+            erreur
+          );
+
+          return null;
+        }
+      }
+    );
+
+    /*
+      UNE SEULE INTERFACE SHOPIFY :
+      Les boutons et la collection utilisent
+      la même instance UI.
+    */
+
+    ShopifyBuy.UI.onReady(client).then(
+      async function(ui) {
+
+        /*
+          CHARGEMENT DU CATALOGUE COMPLET
+          Conservé comme auparavant.
+        */
+
+        const collectionPromise=ui.createComponent(
+          'collection',{
+
+            id:'686474854734',
+
+            node:document.getElementById(
+              'collection-component-1792258001547'
+            ),
+
+            moneyFormat:moneyFormat,
+
+            options:optionsCollection()
+          }
+        ).catch(function(erreur) {
+
+          console.error(
+            'Erreur collection Shopify',
+            erreur
+          );
         });
 
-        if(!variante) {
-          elements.achat.textContent='Indisponible';
-          elements.achat.disabled=true;
-          return;
-        }
+        /*
+          BOUTONS D'ACHAT DES SIX STICKERS
+        */
 
-        elements.achat.disabled=false;
-        elements.achat.textContent='Ajouter au panier 🛒';
+        const boutons=stickersChoisis.map(
+          async function(handle,index) {
 
-        elements.achat.addEventListener(
-          'click',
-          async function() {
+            const produit=await chargements[index];
 
-            if(
-              !panierShopify ||
-              typeof panierShopify.addVariant!=='function'
-            ) {
-              ouvrirFiche(handle);
+            const elements=cartes.get(handle);
+
+            if(!produit || !elements) {
+              afficherSecours(handle);
               return;
             }
 
-            elements.achat.disabled=true;
-            elements.achat.textContent='Ajout en cours…';
+            /*
+              Shopify renvoie parfois un identifiant
+              de type gid://shopify/Product/12345.
+              Le Buy Button utilise l'identifiant
+              numérique du produit.
+            */
+
+            const idBrut=String(produit.id);
+
+            const productId=idBrut.includes('/')
+              ? idBrut.split('/').pop()
+              : idBrut;
+
+            if(!/^\d+$/.test(productId)) {
+              afficherSecours(handle);
+              return;
+            }
+
+            elements.achat.replaceChildren();
 
             try {
 
-              await panierShopify.addVariant(
-                variante,
-                1
-              );
+              await ui.createComponent('product',{
 
-              elements.achat.textContent=
-                '✓ Ajouté au panier';
+                id:productId,
+
+                node:elements.achat,
+
+                moneyFormat:moneyFormat,
+
+                options:optionsBouton()
+
+              });
 
             } catch(erreur) {
 
               console.error(
-                'Erreur ajout panier',
+                'Erreur bouton Shopify :',
+                handle,
                 erreur
               );
 
-              elements.achat.textContent=
-                'Voir et acheter ↗';
-
-              ouvrirFiche(handle);
-
-            } finally {
-
-              setTimeout(function() {
-                elements.achat.disabled=false;
-                elements.achat.textContent=
-                  'Ajouter au panier 🛒';
-              },1200);
-
+              afficherSecours(handle);
             }
           }
         );
 
-      } catch(erreur) {
+        await Promise.allSettled(boutons);
 
-        console.warn(
-          'Aperçu indisponible',
-          handle,
-          erreur
-        );
+        await collectionPromise;
 
-        elements.achat.disabled=false;
-        elements.achat.textContent='Voir et acheter ↗';
-        elements.achat.onclick=function() {
-          ouvrirFiche(handle);
-        };
       }
-    });
-
-    /* CATALOGUE SHOPIFY ORIGINAL */
-
-    ShopifyBuy.UI.onReady(client).then(function(ui) {
-
-      return ui.createComponent('collection',{
-
-        id:'686474854734',
-
-        node:document.getElementById(
-          'collection-component-1792258001547'
-        ),
-
-        moneyFormat:
-          '%E2%82%AC%7B%7Bamount_with_comma_separator%7D%7D',
-
-        options:{
-
-          product:{
-            styles:{
-              product:{
-                '@media (min-width: 601px)':{
-                  'max-width':'calc(25% - 20px)',
-                  'margin-left':'20px',
-                  'margin-bottom':'50px',
-                  'width':'calc(25% - 20px)'
-                }
-              },
-              button:{
-                'background-color':'#800f8f',
-                ':hover':{
-                  'background-color':'#da1af3'
-                }
-              }
-            },
-            text:{
-              button:'Ajouter au panier'
-            }
-          },
-
-          productSet:{
-            styles:{
-              products:{
-                '@media (min-width: 601px)':{
-                  'margin-left':'-20px'
-                }
-              }
-            }
-          },
-
-          modalProduct:{
-            contents:{
-              img:false,
-              imgWithCarousel:true,
-              button:false,
-              buttonWithQuantity:true
-            },
-            styles:{
-              button:{
-                'background-color':'#800f8f',
-                ':hover':{
-                  'background-color':'#da1af3'
-                }
-              }
-            },
-            text:{
-              button:'Ajouter au panier'
-            }
-          },
-
-          option:{},
-
-          cart:{
-            styles:{
-              button:{
-                'background-color':'#800f8f',
-                ':hover':{
-                  'background-color':'#da1af3'
-                }
-              }
-            },
-            text:{
-              total:'Sous-total',
-              button:'Passer commande'
-            }
-          },
-
-          toggle:{
-            styles:{
-              toggle:{
-                'background-color':'#800f8f',
-                ':hover':{
-                  'background-color':'#da1af3'
-                }
-              }
-            }
-          }
-        }
-      });
-
-    }).then(function() {
-
-      /* RÉCUPÉRER LE PANIER EXISTANT */
-
-      ShopifyBuy.UI.onReady(client).then(function(ui) {
-
-        function chercherPanier() {
-
-          if(
-            ui.components &&
-            ui.components.cart &&
-            ui.components.cart[0]
-          ) {
-            panierShopify=ui.components.cart[0];
-          }
-        }
-
-        chercherPanier();
-
-        const intervalle=setInterval(function() {
-          chercherPanier();
-
-          if(panierShopify) {
-            clearInterval(intervalle);
-          }
-        },500);
-
-        setTimeout(function() {
-          clearInterval(intervalle);
-        },15000);
-
-      });
-
-    }).catch(function(erreur) {
+    ).catch(function(erreur) {
 
       console.error(
-        'Erreur catalogue Shopify',
+        'Erreur interface Shopify',
         erreur
       );
 
+      stickersChoisis.forEach(afficherSecours);
+
     });
+
   }
+
+  /* CHARGEMENT DU SDK SHOPIFY */
 
   if(window.ShopifyBuy && window.ShopifyBuy.UI) {
 
@@ -802,14 +969,21 @@ boutonTous.addEventListener('click',function() {
   } else {
 
     const script=document.createElement('script');
+
     script.src=sdkURL;
     script.async=true;
-    script.onload=lancer;
+
+    script.onload=function() {
+      lancer();
+    };
 
     script.onerror=function() {
+
       console.error(
         'Impossible de charger Shopify'
       );
+
+      stickersChoisis.forEach(afficherSecours);
     };
 
     document.head.appendChild(script);
