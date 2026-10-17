@@ -3,7 +3,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#151515">
 <title>BTMAKERS - Vos idées, nos créations</title>
 
@@ -35,10 +35,7 @@ header img {
   background:white;
   border-radius:50%;
 }
-header h1 {
-  font-size:34px;
-  margin:10px 0;
-}
+header h1 {font-size:34px;margin:10px 0}
 header p {margin:0}
 .ligne {
   height:5px;
@@ -51,14 +48,8 @@ main {
   margin:auto;
   padding:20px 16px;
 }
-.intro {
-  text-align:center;
-  padding:12px 0 20px;
-}
-.intro p {
-  color:#666;
-  line-height:1.5;
-}
+.intro {text-align:center;padding:12px 0 20px}
+.intro p {color:#666;line-height:1.5}
 h2 {font-size:24px}
 .grille {
   display:grid;
@@ -85,10 +76,7 @@ h2 {font-size:24px}
   object-fit:cover;
 }
 .contenu {padding:13px}
-.contenu h3 {
-  font-size:15px;
-  margin:0 0 10px;
-}
+.contenu h3 {font-size:15px;margin:0 0 10px}
 .contenu p {
   font-size:13px;
   color:#666;
@@ -117,7 +105,7 @@ h2 {font-size:24px}
   line-height:1.5;
 }
 
-/* SIX STICKERS */
+/* STICKERS À LA UNE */
 
 #stickers-selection {
   display:grid;
@@ -158,6 +146,9 @@ h2 {font-size:24px}
   margin:0 0 12px;
   min-height:22px;
 }
+
+/* BOUTONS SHOPIFY */
+
 .sticker-achat {
   width:100%;
   min-height:45px;
@@ -165,16 +156,16 @@ h2 {font-size:24px}
 .sticker-achat .shopify-buy-frame {
   margin:0!important;
   max-width:100%!important;
+  width:100%!important;
 }
 .sticker-achat iframe {
+  width:100%!important;
   max-width:100%!important;
 }
-.sticker-erreur {
-  display:none;
-  color:#777;
+.attente {
   font-size:12px;
   text-align:center;
-  margin-top:7px;
+  color:#777;
 }
 
 /* CATALOGUE COMPLET */
@@ -209,10 +200,7 @@ h2 {font-size:24px}
   padding:20px;
   box-shadow:0 4px 18px #00000010;
 }
-.panneau p {
-  color:#555;
-  line-height:1.6;
-}
+.panneau p {color:#555;line-height:1.6}
 .panneau a {overflow-wrap:anywhere}
 .navigation {
   position:fixed;
@@ -240,9 +228,7 @@ footer {
   margin:35px 0 10px;
 }
 @media(min-width:650px) {
-  .grille {
-    grid-template-columns:repeat(3,1fr);
-  }
+  .grille {grid-template-columns:repeat(3,1fr)}
   #stickers-selection {
     grid-template-columns:repeat(3,1fr);
   }
@@ -356,7 +342,6 @@ footer {
 </section>
 
 <section class="section" id="stickers">
-
   <h2>🎨 Nos stickers</h2>
   <p class="description">
     Découvrez nos 6 modèles à la une.
@@ -379,7 +364,6 @@ footer {
     </p>
     <div id="collection-component-1792258001547"></div>
   </div>
-
 </section>
 
 <section class="section" id="personnalisation">
@@ -428,7 +412,7 @@ footer {
 
 <script>
 
-/* LES SIX MODÈLES CHOISIS */
+/* SIX STICKERS CHOISIS */
 
 const stickersChoisis=[
   'lot-de-6-stickers-st-31',
@@ -444,8 +428,6 @@ const selection=document.getElementById(
 );
 
 const cartes=new Map();
-
-/* CRÉATION DES SIX CARTES */
 
 stickersChoisis.forEach(function(handle) {
 
@@ -475,16 +457,11 @@ stickersChoisis.forEach(function(handle) {
   achat.className='sticker-achat';
 
   const attente=document.createElement('p');
-  attente.style.cssText=
-    'font-size:12px;color:#777;text-align:center';
+  attente.className='attente';
   attente.textContent='Chargement…';
-
   achat.appendChild(attente);
 
-  const erreur=document.createElement('p');
-  erreur.className='sticker-erreur';
-
-  info.append(titre,prix,achat,erreur);
+  info.append(titre,prix,achat);
   carte.append(photo,info);
   selection.appendChild(carte);
 
@@ -492,8 +469,7 @@ stickersChoisis.forEach(function(handle) {
     photo,
     titre,
     prix,
-    achat,
-    erreur
+    achat
   });
 });
 
@@ -526,7 +502,6 @@ boutonTous.addEventListener('click',function() {
       block:'start'
     });
   }
-
 });
 
 /* SHOPIFY */
@@ -543,7 +518,7 @@ boutonTous.addEventListener('click',function() {
   const moneyFormat=
     '%E2%82%AC%7B%7Bamount_with_comma_separator%7D%7D';
 
-  function afficherSecours(handle) {
+  function secours(handle) {
 
     const elements=cartes.get(handle);
 
@@ -562,7 +537,7 @@ boutonTous.addEventListener('click',function() {
     elements.achat.appendChild(lien);
   }
 
-  function afficherProduit(handle,produit) {
+  function afficherInfos(handle,produit) {
 
     const elements=cartes.get(handle);
 
@@ -591,11 +566,7 @@ boutonTous.addEventListener('click',function() {
         ? montant.amount
         : montant;
 
-      if(
-        valeur!==undefined &&
-        valeur!==null &&
-        Number.isFinite(Number(valeur))
-      ) {
+      if(Number.isFinite(Number(valeur))) {
 
         elements.prix.textContent=
           new Intl.NumberFormat('fr-FR',{
@@ -607,7 +578,7 @@ boutonTous.addEventListener('click',function() {
     }
   }
 
-  /* BOUTON OFFICIEL SHOPIFY */
+  /* STYLE DES BOUTONS D'ACHAT */
 
   function optionsBouton() {
 
@@ -615,26 +586,27 @@ boutonTous.addEventListener('click',function() {
 
       product:{
 
+        buttonDestination:'cart',
+
         contents:{
           img:false,
           title:false,
           price:false,
           description:false,
+          variantTitle:false,
           options:false,
           quantity:false,
           button:true,
           buttonWithQuantity:false
         },
 
-        buttonDestination:'cart',
-
         styles:{
 
           product:{
             'margin':'0',
             'padding':'0',
-            'width':'100%',
             'max-width':'100%',
+            'width':'100%',
 
             '@media (min-width: 601px)':{
               'max-width':'100%',
@@ -649,11 +621,13 @@ boutonTous.addEventListener('click',function() {
             'border-radius':'11px',
             'font-size':'12px',
             'font-weight':'bold',
+            'padding':'13px 5px',
             'width':'100%',
-            'padding':'13px 4px',
+
             ':hover':{
               'background-color':'#e90083'
             },
+
             ':focus':{
               'background-color':'#e90083'
             }
@@ -661,7 +635,7 @@ boutonTous.addEventListener('click',function() {
         },
 
         text:{
-          button:'Ajouter au panier 🛒',
+          button:'Ajouter au panier',
           outOfStock:'Indisponible'
         }
       },
@@ -672,23 +646,10 @@ boutonTous.addEventListener('click',function() {
           imgWithCarousel:true,
           button:false,
           buttonWithQuantity:true
-        },
-        text:{
-          button:'Ajouter au panier'
         }
       },
 
-      option:{},
-
       cart:{
-        styles:{
-          button:{
-            'background-color':'#800f8f',
-            ':hover':{
-              'background-color':'#da1af3'
-            }
-          }
-        },
         text:{
           total:'Sous-total',
           button:'Passer commande'
@@ -702,7 +663,6 @@ boutonTous.addEventListener('click',function() {
           }
         }
       }
-
     };
   }
 
@@ -727,6 +687,7 @@ boutonTous.addEventListener('click',function() {
 
           button:{
             'background-color':'#800f8f',
+
             ':hover':{
               'background-color':'#da1af3'
             }
@@ -760,6 +721,7 @@ boutonTous.addEventListener('click',function() {
         styles:{
           button:{
             'background-color':'#800f8f',
+
             ':hover':{
               'background-color':'#da1af3'
             }
@@ -774,9 +736,11 @@ boutonTous.addEventListener('click',function() {
       option:{},
 
       cart:{
+
         styles:{
           button:{
             'background-color':'#800f8f',
+
             ':hover':{
               'background-color':'#da1af3'
             }
@@ -790,9 +754,11 @@ boutonTous.addEventListener('click',function() {
       },
 
       toggle:{
+
         styles:{
           toggle:{
             'background-color':'#800f8f',
+
             ':hover':{
               'background-color':'#da1af3'
             }
@@ -811,55 +777,45 @@ boutonTous.addEventListener('click',function() {
 
     /*
       PHOTOS ET PRIX :
-      Chargement indépendant des boutons.
+      même fonctionnement que la version
+      qui marchait déjà.
     */
 
-    const produits=new Map();
+    stickersChoisis.forEach(async function(handle) {
 
-    const chargements=stickersChoisis.map(
-      async function(handle) {
+      try {
 
-        try {
+        const produit=
+          await client.product.fetchByHandle(handle);
 
-          const produit=
-            await client.product.fetchByHandle(handle);
-
-          if(produit) {
-            produits.set(handle,produit);
-            afficherProduit(handle,produit);
-          }
-
-          return produit;
-
-        } catch(erreur) {
-
-          console.warn(
-            'Erreur photo ou prix :',
-            handle,
-            erreur
-          );
-
-          return null;
+        if(produit) {
+          afficherInfos(handle,produit);
         }
+
+      } catch(erreur) {
+
+        console.warn(
+          'Photo ou prix indisponible',
+          handle,
+          erreur
+        );
       }
-    );
+    });
 
     /*
-      UNE SEULE INTERFACE SHOPIFY :
-      Les boutons et la collection utilisent
-      la même instance UI.
+      INTERFACE SHOPIFY UNIQUE
     */
 
     ShopifyBuy.UI.onReady(client).then(
       async function(ui) {
 
         /*
-          CHARGEMENT DU CATALOGUE COMPLET
-          Conservé comme auparavant.
+          CATALOGUE COMPLET
         */
 
-        const collectionPromise=ui.createComponent(
-          'collection',{
+        try {
+
+          await ui.createComponent('collection',{
 
             id:'686474854734',
 
@@ -870,97 +826,89 @@ boutonTous.addEventListener('click',function() {
             moneyFormat:moneyFormat,
 
             options:optionsCollection()
-          }
-        ).catch(function(erreur) {
+
+          });
+
+        } catch(erreur) {
 
           console.error(
-            'Erreur collection Shopify',
+            'Erreur catalogue complet',
             erreur
           );
-        });
+        }
 
         /*
-          BOUTONS D'ACHAT DES SIX STICKERS
+          SIX BOUTONS SHOPIFY
+
+          IMPORTANT :
+          on utilise le HANDLE du produit,
+          pas son identifiant numérique.
         */
 
-        const boutons=stickersChoisis.map(
-          async function(handle,index) {
+        for(const handle of stickersChoisis) {
 
-            const produit=await chargements[index];
+          const elements=cartes.get(handle);
 
-            const elements=cartes.get(handle);
+          if(!elements) continue;
 
-            if(!produit || !elements) {
-              afficherSecours(handle);
-              return;
-            }
+          const zone=elements.achat;
+
+          try {
 
             /*
-              Shopify renvoie parfois un identifiant
-              de type gid://shopify/Product/12345.
-              Le Buy Button utilise l'identifiant
-              numérique du produit.
+              Le handle correspond directement
+              à l'adresse du produit Shopify.
             */
 
-            const idBrut=String(produit.id);
+            await ui.createComponent('product',{
 
-            const productId=idBrut.includes('/')
-              ? idBrut.split('/').pop()
-              : idBrut;
+              handle:handle,
 
-            if(!/^\d+$/.test(productId)) {
-              afficherSecours(handle);
-              return;
+              node:zone,
+
+              moneyFormat:moneyFormat,
+
+              options:optionsBouton()
+
+            });
+
+            /*
+              On enlève le texte de chargement
+              seulement après création du bouton.
+            */
+
+            const attente=zone.querySelector('.attente');
+
+            if(attente) {
+              attente.remove();
             }
 
-            elements.achat.replaceChildren();
+          } catch(erreur) {
 
-            try {
+            console.error(
+              'Erreur bouton',
+              handle,
+              erreur
+            );
 
-              await ui.createComponent('product',{
-
-                id:productId,
-
-                node:elements.achat,
-
-                moneyFormat:moneyFormat,
-
-                options:optionsBouton()
-
-              });
-
-            } catch(erreur) {
-
-              console.error(
-                'Erreur bouton Shopify :',
-                handle,
-                erreur
-              );
-
-              afficherSecours(handle);
-            }
+            secours(handle);
           }
-        );
-
-        await Promise.allSettled(boutons);
-
-        await collectionPromise;
+        }
 
       }
     ).catch(function(erreur) {
 
       console.error(
-        'Erreur interface Shopify',
+        'Erreur Shopify',
         erreur
       );
 
-      stickersChoisis.forEach(afficherSecours);
+      stickersChoisis.forEach(secours);
 
     });
-
   }
 
-  /* CHARGEMENT DU SDK SHOPIFY */
+  /* CHARGEMENT DU SDK */
 
   if(window.ShopifyBuy && window.ShopifyBuy.UI) {
 
@@ -973,9 +921,7 @@ boutonTous.addEventListener('click',function() {
     script.src=sdkURL;
     script.async=true;
 
-    script.onload=function() {
-      lancer();
-    };
+    script.onload=lancer;
 
     script.onerror=function() {
 
@@ -983,7 +929,7 @@ boutonTous.addEventListener('click',function() {
         'Impossible de charger Shopify'
       );
 
-      stickersChoisis.forEach(afficherSecours);
+      stickersChoisis.forEach(secours);
     };
 
     document.head.appendChild(script);
