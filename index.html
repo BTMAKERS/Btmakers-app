@@ -1,423 +1,519 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#151515">
-<meta name="description" content="BTMAKERS : mugs, t-shirts, stickers et cadeaux personnalisés.">
-<title>BTMAKERS | Vos idées, nos créations</title>
-<link rel="icon" href="logo-btmakers.png" type="image/png">
+<title>BTMAKERS - Vos idées, nos créations</title>
 
 <style>
 :root {
-  --ink:#171717;
-  --pink:#e90083;
-  --purple:#9418ce;
-  --red:#fb2548;
-  --bg:#f6f5f8;
-  --muted:#666;
-  --shadow:0 5px 22px #15151512;
+  --rose:#e90083;
+  --violet:#9418ce;
+  --noir:#171717;
 }
 * {box-sizing:border-box}
 html {scroll-behavior:smooth}
 body {
   margin:0;
-  font-family:system-ui,-apple-system,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--ink);
-  padding-bottom:76px;
+  padding-bottom:75px;
+  font-family:Arial,system-ui,sans-serif;
+  color:var(--noir);
+  background:#f6f5f8;
 }
-a {color:inherit}
-button,a {-webkit-tap-highlight-color:transparent}
-.wrap {max-width:980px;margin:auto;padding:0 18px}
-.hero {
+header {
+  text-align:center;
   background:#151515;
   color:white;
-  text-align:center;
-  padding:29px 16px 37px;
+  padding:30px 16px;
 }
-.hero img {
+header img {
   width:140px;
   height:140px;
   object-fit:contain;
-  border-radius:50%;
   background:white;
+  border-radius:50%;
 }
-.hero h1 {
-  font-size:35px;
-  letter-spacing:2px;
-  margin:8px 0 4px;
+header h1 {
+  font-size:34px;
+  margin:10px 0;
 }
-.hero p {margin:0;color:#f1eaf1}
-.gradient {
+header p {margin:0}
+.ligne {
   height:5px;
-  background:linear-gradient(90deg,var(--purple),var(--pink),var(--red));
+  background:linear-gradient(90deg,var(--violet),var(--rose),#ff3150);
 }
-.welcome {text-align:center;padding:30px 0 8px}
-.welcome h2 {font-size:26px;margin:0 0 12px}
-.welcome p {
-  color:#555;
-  line-height:1.55;
-  max-width:560px;
-  margin:0 auto 18px;
+main {
+  max-width:1000px;
+  margin:auto;
+  padding:20px 16px;
 }
-.btn {
-  display:inline-flex;
+.intro {text-align:center;padding:12px 0 20px}
+.intro p {color:#666;line-height:1.5}
+h2 {font-size:24px}
+.grille {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.carte {
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 16px #00000010;
+}
+.illustration {
+  background:#f3e7fa;
+  height:125px;
+  display:flex;
   justify-content:center;
   align-items:center;
-  gap:6px;
+  font-size:50px;
+}
+.illustration img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.contenu {padding:13px}
+.contenu h3 {font-size:15px;margin:0 0 10px}
+.contenu p {
+  font-size:13px;
+  color:#666;
+  line-height:1.4;
+}
+.bouton {
+  display:block;
+  width:100%;
+  padding:13px 8px;
   border:0;
-  border-radius:12px;
-  background:linear-gradient(110deg,var(--purple),var(--pink),var(--red));
-  color:white;
+  border-radius:11px;
+  text-align:center;
   text-decoration:none;
-  font-weight:750;
-  padding:13px 17px;
-  font-size:14px;
+  font-size:13px;
+  font-weight:bold;
+  color:white;
+  background:linear-gradient(90deg,var(--violet),var(--rose));
   cursor:pointer;
-  min-height:44px;
 }
-.btn.dark {background:var(--ink)}
-.btn.outline {
-  background:white;
-  color:var(--ink);
-  border:1px solid #ddd;
-}
-.section {padding:20px 0}
-.section h2 {font-size:23px;margin:0 0 8px}
-.sub {
-  color:var(--muted);
-  margin:0 0 18px;
-  line-height:1.5;
-}
-.grid {
+.section {margin-top:35px}
+.description {color:#666;font-size:14px;line-height:1.5}
+
+/* Les 6 stickers sélectionnés */
+#stickers-selection {
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
   gap:14px;
 }
-.product {
+.sticker {
   background:white;
-  border-radius:17px;
-  box-shadow:var(--shadow);
+  border-radius:16px;
   overflow:hidden;
-  display:flex;
-  flex-direction:column;
+  box-shadow:0 4px 18px #00000012;
 }
-.art {
-  height:125px;
-  background:linear-gradient(145deg,#fff1f9,#f2eaff);
+.sticker-photo {
+  width:100%;
+  aspect-ratio:1;
+  background:#f7edf9;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:55px;
+  overflow:hidden;
 }
-.product .inside {
-  padding:14px;
-  display:flex;
-  flex:1;
-  flex-direction:column;
-}
-.product h3 {font-size:16px;margin:0 0 8px}
-.product p {
-  font-size:13px;
-  color:#666;
-  line-height:1.4;
-  margin:0 0 15px;
-  flex:1;
-}
-.product .btn {font-size:12px;padding:11px 8px}
-.panel {
-  background:white;
-  border-radius:17px;
-  box-shadow:var(--shadow);
-  padding:22px;
-  margin:4px 0 12px;
-}
-.panel p {line-height:1.6;color:#555}
-.actions {display:flex;gap:10px;flex-wrap:wrap}
-.contact a.email {
-  overflow-wrap:anywhere;
-  color:#a60079;
-  font-weight:650;
-}
-.nav {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:white;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  border-top:1px solid #eee;
-  box-shadow:0 -4px 20px #0000000b;
-  padding:8px 4px max(8px,env(safe-area-inset-bottom));
-  z-index:5;
-}
-.nav a {
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  flex-direction:column;
-  gap:3px;
-  font-size:11px;
-  font-weight:650;
-  color:#4d4d4d;
-}
-.nav span {font-size:22px}
-.nav a:focus-visible,
-.btn:focus-visible,
-#voir-stickers:focus-visible {
-  outline:3px solid var(--pink);
-  outline-offset:3px;
-}
-footer {
-  text-align:center;
-  color:#777;
-  font-size:12px;
-  padding:12px 0 24px;
-}
-
-/* BOUTON STICKERS */
-#voir-stickers {
-  display:none;
+.sticker-photo img {
   width:100%;
-  padding:16px;
-  margin:20px auto;
-  background:linear-gradient(90deg,#9418ce,#e90083);
-  color:white;
-  border:none;
+  height:100%;
+  object-fit:contain;
+}
+.sticker-placeholder {
+  font-size:44px;
+}
+.sticker-info {padding:12px}
+.sticker-info h3 {
+  font-size:14px;
+  margin:0 0 8px;
+}
+.sticker-prix {
+  font-size:18px;
+  font-weight:bold;
+  color:var(--violet);
+  margin:0 0 12px;
+  min-height:22px;
+}
+.sticker-info .bouton {font-size:12px}
+
+/* Catalogue Shopify masqué au départ */
+#catalogue-complet[hidden] {
+  display:none!important;
+}
+#voir-tous {
+  display:block;
+  width:100%;
+  margin:22px 0 0;
+  padding:17px;
+  border:0;
   border-radius:14px;
+  background:linear-gradient(90deg,var(--violet),var(--rose));
+  color:white;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
 }
-
-/* Masquer les produits après le sixième */
-#stickers-apercu .btmakers-sticker-masque {
-  display:none!important;
+#catalogue-complet {
+  margin-top:24px;
+  background:white;
+  border-radius:16px;
+  padding:12px 6px;
 }
-
+.panneau {
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 4px 18px #00000010;
+}
+.panneau p {color:#555;line-height:1.6}
+.panneau a {overflow-wrap:anywhere}
+.navigation {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:white;
+  padding:12px 5px;
+  box-shadow:0 -3px 15px #00000015;
+  z-index:10;
+}
+.navigation a {
+  text-align:center;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:bold;
+  color:#333;
+}
+footer {
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  margin:35px 0 10px;
+}
 @media(min-width:650px) {
-  .grid {grid-template-columns:repeat(3,1fr)}
-  .art {height:170px}
-  .hero img {width:165px;height:165px}
-  .nav {
-    max-width:520px;
-    margin:auto;
-    border-radius:18px 18px 0 0;
-  }
-}
-@media(prefers-reduced-motion:reduce) {
-  html {scroll-behavior:auto}
+  .grille {grid-template-columns:repeat(3,1fr)}
+  #stickers-selection {grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
 
 <body>
 
-<header class="hero" id="accueil">
-  <img src="logo-btmakers.png" alt="Logo BTMAKERS" width="140" height="140">
+<header id="accueil">
+  <img src="logo-btmakers.png" alt="BTMAKERS">
   <h1>BTMAKERS</h1>
   <p>Vos idées, nos créations</p>
 </header>
 
-<div class="gradient"></div>
+<div class="ligne"></div>
 
-<main class="wrap">
+<main>
 
-<section class="welcome">
+<section class="intro">
   <h2>Bienvenue chez BTMAKERS</h2>
-  <p>Stickers, mugs, t-shirts et cadeaux personnalisés : trouvez la création qui vous ressemble !</p>
-  <a class="btn" href="#catalogue">Découvrir le catalogue ↓</a>
+  <p>Mugs, t-shirts, stickers, magnets et cadeaux personnalisés.</p>
+  <a href="#catalogue" class="bouton">Découvrir nos produits ↓</a>
 </section>
 
-<section class="section" id="catalogue">
-  <h2>Notre catalogue</h2>
-  <p class="sub">Choisissez une catégorie et découvrez nos créations.</p>
+<section id="catalogue">
+  <h2>🛍️ Notre catalogue</h2>
+  <p class="description">Découvrez nos différentes créations.</p>
 
-  <div class="grid" id="products"></div>
+  <div class="grille">
 
-  <h2 style="margin-top:26px">🎨 Nos stickers</h2>
+    <article class="carte">
+      <div class="illustration">
+        <img src="mug-btmakers.png" alt="Mug personnalisé"
+          onerror="this.remove();this.parentElement.textContent='☕'">
+      </div>
+      <div class="contenu">
+        <h3>Mugs personnalisés</h3>
+        <p>Créez un mug unique.</p>
+        <a class="bouton" href="personnaliser-mug.html">
+          Personnaliser mon mug
+        </a>
+      </div>
+    </article>
 
-  <div id="stickers-apercu">
+    <article class="carte">
+      <div class="illustration">👕</div>
+      <div class="contenu">
+        <h3>T-shirts</h3>
+        <p>Des créations à votre image.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🎨</div>
+      <div class="contenu">
+        <h3>Stickers</h3>
+        <p>Découvrez nos stickers.</p>
+        <a class="bouton" href="#stickers">
+          Voir les stickers
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🧲</div>
+      <div class="contenu">
+        <h3>Magnets</h3>
+        <p>Des magnets personnalisés.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🔑</div>
+      <div class="contenu">
+        <h3>Porte-clés</h3>
+        <p>Des accessoires uniques.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🎁</div>
+      <div class="contenu">
+        <h3>Cadeaux personnalisés</h3>
+        <p>Pour toutes les occasions.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="section" id="stickers">
+
+  <h2>🎨 Nos stickers</h2>
+  <p class="description">
+    Découvrez nos 6 modèles à la une.
+  </p>
+
+  <div id="stickers-selection"></div>
+
+  <button
+    id="voir-tous"
+    type="button"
+    aria-expanded="false"
+    aria-controls="catalogue-complet">
+    Voir tous les stickers ↓
+  </button>
+
+  <div id="catalogue-complet" hidden>
+    <h2>🛒 Tous nos stickers</h2>
+    <p class="description">
+      Ajoutez vos modèles préférés au panier.
+    </p>
     <div id="collection-component-1792258001547"></div>
   </div>
 
-  <button id="voir-stickers" type="button"
-          aria-expanded="false"
-          aria-controls="stickers-apercu">
-    Voir tous les stickers ↓
-  </button>
 </section>
 
 <section class="section" id="personnalisation">
-  <div class="panel">
-    <h2>✨ Votre idée, notre création</h2>
-    <p>Un prénom, une photo, un texte ou un design particulier ? Contactez-nous pour discuter de votre projet personnalisé.</p>
-
-    <div class="actions">
-      <a class="btn" href="mailto:btmakers2026@outlook.fr?subject=Demande%20de%20personnalisation%20BTMAKERS">
-        Demander une personnalisation
-      </a>
-      <a class="btn outline" href="https://www.btmakers.fr" target="_blank" rel="noopener noreferrer">
-        Visiter la boutique ↗
-      </a>
-    </div>
+  <div class="panneau">
+    <h2>✨ Créez votre produit</h2>
+    <p>
+      Vous avez une photo, un prénom ou un design
+      à personnaliser ? Contactez-nous !
+    </p>
+    <a class="bouton"
+      href="mailto:btmakers2026@outlook.fr?subject=Personnalisation%20BTMAKERS">
+      Demander une personnalisation
+    </a>
   </div>
 </section>
 
-<section class="section contact" id="contact">
-  <div class="panel">
-    <h2>Nous contacter</h2>
-    <p>Une question sur un produit ou une commande ?</p>
-    <p>📧 <a class="email" href="mailto:btmakers2026@outlook.fr">btmakers2026@outlook.fr</a></p>
-    <p>🛍️ <a class="email" href="https://www.btmakers.fr" target="_blank" rel="noopener noreferrer">www.btmakers.fr</a></p>
+<section class="section" id="contact">
+  <div class="panneau">
+    <h2>📧 Nous contacter</h2>
+    <p>
+      <a href="mailto:btmakers2026@outlook.fr">
+        btmakers2026@outlook.fr
+      </a>
+    </p>
+    <p>
+      <a href="https://www.btmakers.fr">
+        www.btmakers.fr
+      </a>
+    </p>
   </div>
 </section>
 
-<footer>© 2026 BTMAKERS — Créations personnalisées</footer>
+<footer>
+  © 2026 BTMAKERS - Vos idées, nos créations
+</footer>
 
 </main>
 
-<nav class="nav" aria-label="Navigation principale">
-  <a href="#accueil"><span aria-hidden="true">⌂</span>Accueil</a>
-  <a href="#catalogue"><span aria-hidden="true">▦</span>Catalogue</a>
-  <a href="#personnalisation"><span aria-hidden="true">✦</span>Sur mesure</a>
-  <a href="#contact"><span aria-hidden="true">✉</span>Contact</a>
+<nav class="navigation">
+  <a href="#accueil">🏠<div>Accueil</div></a>
+  <a href="#catalogue">🛍️<div>Catalogue</div></a>
+  <a href="#stickers">🎨<div>Stickers</div></a>
+  <a href="#contact">✉️<div>Contact</div></a>
 </nav>
 
 <script>
-const shop='https://www.btmakers.fr';
+/* LES 6 STICKERS CHOISIS */
 
-const categories=[
-  {
-    icon:'☕',
-    image:'mug-btmakers.png',
-    name:'Mugs personnalisés',
-    desc:'Créez votre mug avec votre propre design.',
-    url:shop
-  },
-  {
-    icon:'👕',
-    name:'T-shirts personnalisés',
-    desc:'Des créations à votre image.',
-    url:shop
-  },
-  {
-    icon:'🎨',
-    name:'Stickers',
-    desc:'Pour décorer et personnaliser.',
-    url:shop
-  },
-  {
-    icon:'🧲',
-    name:'Magnets',
-    desc:'Des souvenirs à afficher.',
-    url:shop
-  },
-  {
-    icon:'🔑',
-    name:'Porte-clés',
-    desc:'Un petit cadeau unique.',
-    url:shop
-  },
-  {
-    icon:'🎁',
-    name:'Cadeaux personnalisés',
-    desc:'Pour toutes les occasions.',
-    url:shop
-  }
+const stickersChoisis=[
+  'lot-de-6-stickers-st-31',
+  'lot-de-6-stickers-st-26',
+  'lot-de-6-stickers-st-21',
+  'lot-de-6-stickers-st-09',
+  'lot-de-6-stickers-st-02',
+  'lot-de-6-stickers-st-16'
 ];
 
-const grid=document.getElementById('products');
+const selection=document.getElementById('stickers-selection');
 
-for(const item of categories) {
-  const card=document.createElement('article');
-  card.className='product';
+const cartes=new Map();
 
-  const art=document.createElement('div');
-  art.className='art';
+stickersChoisis.forEach(function(handle) {
+  const numero=handle.split('-').pop().toUpperCase();
 
-  if(item.image) {
-    const img=document.createElement('img');
-    img.src=item.image;
-    img.alt=item.name;
-    img.style.cssText='width:100%;height:100%;object-fit:cover';
-    art.appendChild(img);
-  } else {
-    art.textContent=item.icon;
+  const carte=document.createElement('article');
+  carte.className='sticker';
+
+  const photo=document.createElement('div');
+  photo.className='sticker-photo';
+
+  const placeholder=document.createElement('span');
+  placeholder.className='sticker-placeholder';
+  placeholder.textContent='🎨';
+  photo.appendChild(placeholder);
+
+  const info=document.createElement('div');
+  info.className='sticker-info';
+
+  const titre=document.createElement('h3');
+  titre.textContent='Lot de 6 stickers ST-'+numero;
+
+  const prix=document.createElement('p');
+  prix.className='sticker-prix';
+  prix.textContent='';
+
+  const achat=document.createElement('a');
+  achat.className='bouton';
+  achat.href='https://btmakers.fr/products/'+handle;
+  achat.target='_blank';
+  achat.rel='noopener noreferrer';
+  achat.textContent='Voir et acheter ↗';
+
+  info.append(titre,prix,achat);
+  carte.append(photo,info);
+  selection.appendChild(carte);
+
+  cartes.set(handle,{photo,titre,prix});
+});
+
+/* BOUTON VOIR TOUS LES STICKERS */
+
+const boutonTous=document.getElementById('voir-tous');
+const catalogueComplet=document.getElementById('catalogue-complet');
+
+boutonTous.addEventListener('click',function() {
+  const ouvrir=catalogueComplet.hidden;
+
+  catalogueComplet.hidden=!ouvrir;
+  boutonTous.setAttribute('aria-expanded',String(ouvrir));
+
+  boutonTous.textContent=ouvrir
+    ? 'Voir moins de stickers ↑'
+    : 'Voir tous les stickers ↓';
+
+  if(ouvrir) {
+    catalogueComplet.scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
   }
+});
 
-  art.setAttribute('aria-hidden','true');
+/* CHARGEMENT DE SHOPIFY */
 
-  const inside=document.createElement('div');
-  inside.className='inside';
-
-  const h=document.createElement('h3');
-  h.textContent=item.name;
-
-  const p=document.createElement('p');
-  p.textContent=item.desc;
-
-  const link=document.createElement('a');
-  link.className='btn dark';
-  link.href=item.url;
-  link.target='_blank';
-  link.rel='noopener noreferrer';
-  link.textContent='Voir sur la boutique ↗';
-
-  inside.append(h,p);
-
-  if(item.name==='Mugs personnalisés') {
-    const perso=document.createElement('a');
-    perso.className='btn';
-    perso.href='personnaliser-mug.html';
-    perso.textContent='🎨 Personnaliser mon mug';
-    perso.style.cssText='background:linear-gradient(90deg,#9418ce,#e90083);color:white;margin-bottom:10px;text-align:center';
-    inside.append(perso);
-  }
-
-  inside.append(link);
-  card.append(art,inside);
-  grid.append(card);
-}
-</script>
-
-<!-- SHOPIFY : COLLECTION STICKERS -->
-<script>
 (function() {
-  const scriptURL='https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+  const sdkURL=
+    'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
 
-  function loadScript() {
-    const s=document.createElement('script');
-    s.async=true;
-    s.src=scriptURL;
-    s.onload=ShopifyBuyInit;
-    document.head.appendChild(s);
-  }
-
-  if(window.ShopifyBuy) {
-    if(window.ShopifyBuy.UI) {
-      ShopifyBuyInit();
-    } else {
-      loadScript();
-    }
-  } else {
-    loadScript();
-  }
-
-  function ShopifyBuyInit() {
+  function lancer() {
     const client=ShopifyBuy.buildClient({
       domain:'0chexn-mc.myshopify.com',
       storefrontAccessToken:'89752ee985127238f6dc732f133c4e3b'
     });
 
+    /* Récupérer les photos et prix des 6 modèles */
+
+    stickersChoisis.forEach(async function(handle) {
+      try {
+        const produit=await client.product.fetchByHandle(handle);
+
+        if(!produit) return;
+
+        const elements=cartes.get(handle);
+        if(!elements) return;
+
+        if(produit.images && produit.images.length) {
+          const image=document.createElement('img');
+          image.src=produit.images[0].src;
+          image.alt=produit.title;
+          image.loading='lazy';
+
+          elements.photo.replaceChildren(image);
+        }
+
+        if(produit.title) {
+          elements.titre.textContent=produit.title;
+        }
+
+        if(produit.variants && produit.variants.length) {
+          const montant=produit.variants[0].price;
+          const valeur=typeof montant==='object'
+            ? montant.amount
+            : montant;
+
+          if(valeur!==undefined && valeur!==null) {
+            elements.prix.textContent=
+              new Intl.NumberFormat('fr-FR',{
+                style:'currency',
+                currency:'EUR'
+              }).format(Number(valeur));
+          }
+        }
+      } catch(erreur) {
+        console.warn('Aperçu indisponible :',handle);
+      }
+    });
+
+    /* Collection complète avec panier Shopify */
+
     ShopifyBuy.UI.onReady(client).then(function(ui) {
-      ui.createComponent('collection',{
+      return ui.createComponent('collection',{
         id:'686474854734',
-        node:document.getElementById('collection-component-1792258001547'),
-        moneyFormat:'%E2%82%AC%7B%7Bamount_with_comma_separator%7D%7D',
+        node:document.getElementById(
+          'collection-component-1792258001547'
+        ),
+        moneyFormat:
+          '%E2%82%AC%7B%7Bamount_with_comma_separator%7D%7D',
         options:{
           product:{
             styles:{
@@ -427,27 +523,16 @@ for(const item of categories) {
                   'margin-left':'20px',
                   'margin-bottom':'50px',
                   'width':'calc(25% - 20px)'
-                },
-                img:{
-                  height:'calc(100% - 15px)',
-                  position:'absolute',
-                  left:'0',
-                  right:'0',
-                  top:'0'
-                },
-                imgWrapper:{
-                  'padding-top':'calc(75% + 15px)',
-                  position:'relative',
-                  height:'0'
                 }
               },
               button:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'},
-                ':focus':{'background-color':'#da1af3'}
+                ':hover':{'background-color':'#da1af3'}
               }
             },
-            text:{button:'Ajouter au panier'}
+            text:{
+              button:'Ajouter au panier'
+            }
           },
           productSet:{
             styles:{
@@ -466,28 +551,21 @@ for(const item of categories) {
               buttonWithQuantity:true
             },
             styles:{
-              product:{
-                '@media (min-width: 601px)':{
-                  'max-width':'100%',
-                  'margin-left':'0px',
-                  'margin-bottom':'0px'
-                }
-              },
               button:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'},
-                ':focus':{'background-color':'#da1af3'}
+                ':hover':{'background-color':'#da1af3'}
               }
             },
-            text:{button:'Ajouter au panier'}
+            text:{
+              button:'Ajouter au panier'
+            }
           },
           option:{},
           cart:{
             styles:{
               button:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'},
-                ':focus':{'background-color':'#da1af3'}
+                ':hover':{'background-color':'#da1af3'}
               }
             },
             text:{
@@ -499,69 +577,29 @@ for(const item of categories) {
             styles:{
               toggle:{
                 'background-color':'#800f8f',
-                ':hover':{'background-color':'#da1af3'},
-                ':focus':{'background-color':'#da1af3'}
+                ':hover':{'background-color':'#da1af3'}
               }
             }
           }
         }
       });
+    }).catch(function(erreur) {
+      console.error('Erreur catalogue Shopify :',erreur);
     });
   }
-})();
-</script>
 
-<!-- LIMITATION À 6 STICKERS -->
-<script>
-(function() {
-  const root=document.getElementById('stickers-apercu');
-  const button=document.getElementById('voir-stickers');
-
-  let expanded=false;
-
-  function refresh() {
-    const frames=Array.from(
-      root.querySelectorAll('.shopify-buy-frame--product')
-    );
-
-    if(!frames.length) return;
-
-    frames.forEach(function(frame,index) {
-      frame.classList.toggle(
-        'btmakers-sticker-masque',
-        !expanded && index>=6
-      );
-    });
-
-    button.style.display=frames.length>6?'block':'none';
-
-    button.setAttribute('aria-expanded',String(expanded));
-
-    button.textContent=expanded
-      ? 'Voir moins de stickers ↑'
-      : 'Voir tous les stickers ↓';
+  if(window.ShopifyBuy && window.ShopifyBuy.UI) {
+    lancer();
+  } else {
+    const script=document.createElement('script');
+    script.src=sdkURL;
+    script.async=true;
+    script.onload=lancer;
+    script.onerror=function() {
+      console.error('Impossible de charger Shopify');
+    };
+    document.head.appendChild(script);
   }
-
-  button.addEventListener('click',function() {
-    expanded=!expanded;
-    refresh();
-
-    if(!expanded) {
-      root.scrollIntoView({
-        behavior:'smooth',
-        block:'start'
-      });
-    }
-  });
-
-  const observer=new MutationObserver(refresh);
-
-  observer.observe(root,{
-    childList:true,
-    subtree:true
-  });
-
-  refresh();
 })();
 </script>
 
