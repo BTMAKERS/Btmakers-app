@@ -9,6 +9,26 @@
 <title>BTMAKERS | Vos idées, nos créations</title>
 <link rel="icon" href="logo-btmakers.png" type="image/png">
 <style>
+/* Afficher seulement 6 stickers au départ */
+#stickers-apercu:not(.tout-afficher)
+.shopify-buy__product:nth-child(n+7) {
+  display: none !important;
+}
+
+/* Bouton Voir tous les stickers */
+#voir-stickers {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin: 20px auto;
+  background: linear-gradient(90deg, #9418ce, #e90083);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
 :root{--ink:#171717;--pink:#e90083;--purple:#9418ce;--red:#fb2548;--bg:#f6f5f8;--muted:#666;--shadow:0 5px 22px #15151512}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -67,8 +87,15 @@ footer{text-align:center;color:#777;font-size:12px;padding:12px 0 24px}
 <h2>Notre catalogue</h2>
 <p class="sub">Choisissez une catégorie et découvrez nos créations.</p>
 <div class="grid" id="products"></div>
-<h2>🛍️ Nos produits disponibles</h2>
-<div id="collection-component-1792258001547"></div>
+<h2>🎨 Nos stickers</h2>
+
+<div id="stickers-apercu">
+  <div id="collection-component-1792258001547"></div>
+</div>
+
+<button id="voir-stickers" type="button">
+  Voir tous les stickers ↓
+</button>
 </section>
 <section class="section" id="personnalisation">
 <div class="panel">
@@ -290,6 +317,16 @@ grid.append(card);
   }
 })();
 /*]]>*/
+</script>
+<script>
+document.getElementById('voir-stickers').addEventListener('click', function () {
+  const zone = document.getElementById('stickers-apercu');
+  const ouvert = zone.classList.toggle('tout-afficher');
+
+  this.textContent = ouvert
+    ? 'Voir moins de stickers ↑'
+    : 'Voir tous les stickers ↓';
+});
 </script>
 </body>
 </html>
