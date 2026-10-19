@@ -275,16 +275,14 @@ footer {
   box-shadow:
     0 0 0 5px #e90083,
     0 7px 24px #0008;
-  background:conic-gradient(
-    from 0deg,
-    #e90083 0deg 45deg,
-    #7c25c6 45deg 90deg,
-    #b90077 90deg 135deg,
-    #a544df 135deg 180deg,
-    #e90083 180deg 225deg,
-    #7424b7 225deg 270deg,
-    #d133a1 270deg 315deg,
-    #4b276f 315deg 360deg
+   background:conic-gradient(
+     from 0deg,
+     #e90083 0deg 60deg,
+     #7c25c6 60deg 120deg,
+     #b90077 120deg 180deg,
+     #a544df 180deg 240deg,
+     #d133a1 240deg 300deg,
+     #4b276f 300deg 360deg
   );
   transition:transform 5s cubic-bezier(.12,.72,.1,1);
 }
@@ -384,6 +382,7 @@ footer {
   color:#d7c5db;
 }
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
 <body>
@@ -405,54 +404,19 @@ footer {
   <h2 id="titre-roue">🎡 La roue de la chance</h2>
 
   <p class="roue-sous-titre">
-    1 tour gratuit • 7 récompenses possibles
+    1 tour gratuit par adresse e-mail • 6 récompenses possibles
   </p>
 
   <div class="roue-zone" aria-label="Roue BTMAKERS">
 
     <div id="roue-disque" class="roue-disque">
-
-      <div class="roue-case"
-        style="transform:rotate(-67.5deg) translateX(13px)">
-        <span>-5 %</span>
-      </div>
-
-      <div class="roue-case"
-        style="transform:rotate(-22.5deg) translateX(13px)">
-        <span>-10 %</span>
-      </div>
-
-      <div class="roue-case"
-        style="transform:rotate(22.5deg) translateX(13px)">
-        <span>-15 %</span>
-      </div>
-
-      <div class="roue-case"
-        style="transform:rotate(67.5deg) translateX(13px)">
-        <span>-20 %</span>
-      </div>
-
-      <div class="roue-case"
-        style="transform:rotate(112.5deg) translateX(13px)">
-        <span>6 stickers</span>
-      </div>
-
-      <div class="roue-case"
-        style="transform:rotate(157.5deg) translateX(13px)">
-        <span>1 magnet</span>
-      </div>
-
-      <div class="roue-case"
-        style="transform:rotate(202.5deg) translateX(13px)">
-        <span>Livraison offerte</span>
-      </div>
-
-      <div class="roue-case"
-        style="transform:rotate(247.5deg) translateX(13px)">
-        <span>-5 %</span>
-      </div>
-
-    </div>
+       <div class="roue-case" style="transform:rotate(-60deg) translateX(13px)"><span>-5 %</span></div>
+       <div class="roue-case" style="transform:rotate(0deg) translateX(13px)"><span>-10 %</span></div>
+       <div class="roue-case" style="transform:rotate(60deg) translateX(13px)"><span>-15 %</span></div>
+       <div class="roue-case" style="transform:rotate(120deg) translateX(13px)"><span>-20 %</span></div>
+       <div class="roue-case" style="transform:rotate(180deg) translateX(13px)"><span>6 stickers</span></div>
+       <div class="roue-case" style="transform:rotate(240deg) translateX(13px)"><span>Livraison offerte</span></div>
+     </div>
 
     <div class="roue-fleche"></div>
     <div class="roue-centre">BTM</div>
@@ -472,14 +436,19 @@ footer {
     required
   >
 
-  <button
-    id="roue-lancer"
-    class="roue-bouton"
-    type="button">
-    🎁 TOURNER LA ROUE
-  </button>
+     <label style="display:block;max-width:340px;margin:12px auto;font-size:12px;text-align:left">
+     <input id="roue-consentement" type="checkbox">
+     J’accepte de recevoir des offres BTMAKERS par e-mail (facultatif).
+   </label>
 
-  <div
+   <div class="cf-turnstile" data-sitekey="0x4AAAAAAFafo8ysnuYK3ASl"
+     style="display:flex;justify-content:center;margin:12px auto"></div>
+
+   <button id="roue-lancer" class="roue-bouton" type="button">
+     🎁 TOURNER LA ROUE
+   </button>
+
+<div
     id="roue-resultat"
     class="roue-resultat"
     role="status"
@@ -669,134 +638,81 @@ footer {
 
 <script>
 
-/* ROUE : SIMULATION LOCALE */
-
+/* ROUE : attribution exclusivement côté serveur.
+   NE PAS PUBLIER avant de déployer le point d’entrée sécurisé indiqué ci-dessous. */
 (function() {
+  const API_ROUE = 'https://mxrsgmuvghvbzddladny.supabase.co/functions/v1/roue-btmakers-public-v2';
+  const disque = document.getElementById('roue-disque');
+  const bouton = document.getElementById('roue-lancer');
+  const email = document.getElementById('roue-email');
+  const consentement = document.getElementById('roue-consentement');
+  const resultat = document.getElementById('roue-resultat');
+  const gains = ['-5%', '-10%', '-15%', '-20%', '6 stickers offerts', 'Livraison offerte'];
+  let enCours = false;
+  let angleActuel = 0;
 
-  const disque=document.getElementById('roue-disque');
-  const bouton=document.getElementById('roue-lancer');
-  const email=document.getElementById('roue-email');
-  const resultat=document.getElementById('roue-resultat');
-
-  const cle='btmakers_roue_demo_2026';
-
-  const prix=[
-    {nom:'-5 %',poids:35,index:[0,7]},
-    {nom:'-10 %',poids:25,index:[1]},
-    {nom:'-15 %',poids:15,index:[2]},
-    {nom:'-20 %',poids:5,index:[3]},
-    {nom:'6 stickers offerts',poids:10,index:[4]},
-    {nom:'1 magnet offert',poids:5,index:[5]},
-    {nom:'Livraison offerte',poids:5,index:[6]}
-  ];
-
-  let tourne=false;
-
-  function afficherDejaJoue() {
-
-    try {
-
-      const sauvegarde=JSON.parse(
-        localStorage.getItem(cle)
-      );
-
-      if(sauvegarde) {
-
-        bouton.disabled=true;
-        email.disabled=true;
-        resultat.hidden=false;
-
-        resultat.textContent=
-          '🎉 Votre résultat test : '+
-          sauvegarde.gain+
-          '. Ce résultat ne constitue pas un bon de réduction utilisable.';
-
-      }
-
-    } catch(e) {}
+  function message(texte) {
+    resultat.hidden = false;
+    resultat.textContent = texte;
   }
 
-  afficherDejaJoue();
+  bouton.addEventListener('click', async function() {
+    if (enCours) return;
+    if (!email.checkValidity()) { email.reportValidity(); return; }
+    const token = window.turnstile?.getResponse();
+    if (!token) { message('Veuillez valider la vérification anti-robot.'); return; }
 
-  bouton.addEventListener('click',function() {
-
-    if(tourne || bouton.disabled) return;
-
-    if(!email.checkValidity()) {
-      email.reportValidity();
-      return;
-    }
-
-    if(localStorage.getItem(cle)) {
-      afficherDejaJoue();
-      return;
-    }
-
-    tourne=true;
-    bouton.disabled=true;
-
-    let n;
-
-    if(window.crypto && crypto.getRandomValues) {
-
-      const r=new Uint32Array(1);
-      crypto.getRandomValues(r);
-      n=r[0]/4294967296*100;
-
-    } else {
-
-      n=Math.random()*100;
-
-    }
-
-    let cumul=0;
-    let gain=prix[0];
-
-    for(const p of prix) {
-
-      cumul+=p.poids;
-
-      if(n<cumul) {
-        gain=p;
-        break;
-      }
-    }
-
-    const segment=gain.index[
-      Math.floor(Math.random()*gain.index.length)
-    ];
-
-    const cible=(
-      360-(segment*45+22.5)
-    )%360;
-
-    disque.style.transform=
-      'rotate('+(360*6+cible)+'deg)';
-
+    enCours = true;
+    bouton.disabled = true;
+    message('⏳ Attribution de votre cadeau en cours…');
     try {
+      const reponse = await fetch(API_ROUE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.value.trim(),
+          consentement_marketing: consentement.checked,
+          turnstile_token: token
+        })
+      });
+      const donnees = await reponse.json();
+      if (!reponse.ok || donnees.succes !== true || !donnees.code) {
+        throw new Error(donnees.message || donnees.erreur || 'Votre participation n’a pas pu être finalisée.');
+      }
+      const index = gains.indexOf(donnees.gain);
+      if (index < 0) throw new Error('Récompense inconnue : contactez BTMAKERS.');
 
-      localStorage.setItem(cle,JSON.stringify({
-        gain:gain.nom,
-        date:new Date().toISOString()
-      }));
+      const cible = (360 - (index * 60 + 30)) % 360;
+      const actuel = ((angleActuel % 360) + 360) % 360;
+      const delta = (cible - actuel + 360) % 360;
+      angleActuel += 360 * 6 + delta;
+      disque.style.transform = `rotate(${angleActuel}deg)`;
 
-    } catch(e) {}
-
-    setTimeout(function() {
-
-      resultat.hidden=false;
-
-      resultat.textContent=
-        '🎉 Bravo ! Résultat de démonstration : '+
-        gain.nom+
-        '. Aucun code Shopify n’est encore activé.';
-
-      email.disabled=true;
-
-    },5100);
-
+      email.disabled = true;
+      consentement.disabled = true;
+      setTimeout(function() {
+        resultat.replaceChildren();
+        const titre = document.createElement('div');
+        titre.textContent = `🎉 Bravo ! ${donnees.gain}`;
+        const code = document.createElement('div');
+        code.style.cssText = 'font-size:19px;margin:12px 0;overflow-wrap:anywhere';
+        code.textContent = donnees.code;
+        const lien = document.createElement('a');
+        lien.className = 'bouton';
+        lien.href = 'https://www.btmakers.fr/discount/' + encodeURIComponent(donnees.code);
+        lien.textContent = '🛍️ Utiliser mon code';
+        const info = document.createElement('p');
+        info.textContent = 'Votre code est également envoyé par e-mail.';
+        resultat.append(titre, code, lien, info);
+      }, 5100);
+    } catch (erreur) {
+      message('⚠️ ' + (erreur.message || 'Une erreur est survenue.') + ' Si vous avez déjà joué, contactez BTMAKERS.');
+      bouton.disabled = false;
+    } finally {
+      enCours = false;
+      window.turnstile?.reset();
+    }
   });
-
 })();
 
 /* SIX STICKERS CHOISIS */
