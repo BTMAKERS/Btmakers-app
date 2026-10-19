@@ -1,0 +1,1262 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#151515">
+<title>BTMAKERS - Vos idées, nos créations</title>
+
+<style>
+:root {
+  --rose:#e90083;
+  --violet:#9418ce;
+  --noir:#171717;
+}
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+
+body {
+  margin:0;
+  padding-bottom:75px;
+  font-family:Arial,system-ui,sans-serif;
+  color:var(--noir);
+  background:#f6f5f8;
+}
+header {
+  text-align:center;
+  background:#151515;
+  color:white;
+  padding:30px 16px;
+}
+header img {
+  width:140px;
+  height:140px;
+  object-fit:contain;
+  background:white;
+  border-radius:50%;
+}
+header h1 {font-size:34px;margin:10px 0}
+header p {margin:0}
+
+.ligne {
+  height:5px;
+  background:linear-gradient(
+    90deg,var(--violet),var(--rose),#ff3150
+  );
+}
+main {
+  max-width:1000px;
+  margin:auto;
+  padding:20px 16px;
+}
+.intro {text-align:center;padding:12px 0 20px}
+.intro p {color:#666;line-height:1.5}
+h2 {font-size:24px}
+
+.grille {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.carte {
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 16px #00000010;
+}
+.illustration {
+  background:#f3e7fa;
+  height:125px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:50px;
+}
+.illustration img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.contenu {padding:13px}
+.contenu h3 {font-size:15px;margin:0 0 10px}
+.contenu p {
+  font-size:13px;
+  color:#666;
+  line-height:1.4;
+}
+.bouton {
+  display:block;
+  width:100%;
+  padding:13px 8px;
+  border:0;
+  border-radius:11px;
+  text-align:center;
+  text-decoration:none;
+  font-size:13px;
+  font-weight:bold;
+  color:white;
+  background:linear-gradient(
+    90deg,var(--violet),var(--rose)
+  );
+  cursor:pointer;
+}
+.section {margin-top:35px}
+.description {
+  color:#666;
+  font-size:14px;
+  line-height:1.5;
+}
+
+/* STICKERS À LA UNE */
+
+#stickers-selection {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.sticker {
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 18px #00000012;
+  min-width:0;
+}
+.sticker-photo {
+  width:100%;
+  aspect-ratio:1;
+  background:#f7edf9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.sticker-photo img {
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.sticker-placeholder {font-size:44px}
+.sticker-info {padding:12px}
+.sticker-info h3 {
+  font-size:14px;
+  margin:0 0 8px;
+}
+.sticker-prix {
+  font-size:18px;
+  font-weight:bold;
+  color:var(--violet);
+  margin:0 0 12px;
+  min-height:22px;
+}
+
+/* BOUTONS SHOPIFY */
+
+.sticker-achat {
+  width:100%;
+  min-height:45px;
+}
+.sticker-achat .shopify-buy-frame {
+  margin:0!important;
+  max-width:100%!important;
+  width:100%!important;
+}
+.sticker-achat iframe {
+  width:100%!important;
+  max-width:100%!important;
+}
+.attente {
+  font-size:12px;
+  text-align:center;
+  color:#777;
+}
+
+/* CATALOGUE COMPLET */
+
+#catalogue-complet[hidden] {
+  display:none!important;
+}
+#voir-tous {
+  display:block;
+  width:100%;
+  margin:22px 0 0;
+  padding:17px;
+  border:0;
+  border-radius:14px;
+  background:linear-gradient(
+    90deg,var(--violet),var(--rose)
+  );
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+#catalogue-complet {
+  margin-top:24px;
+  background:white;
+  border-radius:16px;
+  padding:12px 6px;
+}
+.panneau {
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:0 4px 18px #00000010;
+}
+.panneau p {color:#555;line-height:1.6}
+.panneau a {overflow-wrap:anywhere}
+
+.navigation {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:white;
+  padding:12px 5px;
+  box-shadow:0 -3px 15px #00000015;
+  z-index:10;
+}
+.navigation a {
+  text-align:center;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:bold;
+  color:#333;
+}
+footer {
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  margin:35px 0 10px;
+}
+@media(min-width:650px) {
+  .grille {grid-template-columns:repeat(3,1fr)}
+  #stickers-selection {
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+/* ROUE DE LA CHANCE */
+
+.roue-section {
+  margin:18px auto 26px;
+  max-width:580px;
+  text-align:center;
+  background:#1d1327;
+  color:white;
+  border-radius:22px;
+  padding:24px 15px;
+  box-shadow:0 8px 25px #00000022;
+}
+.roue-section h2 {
+  margin:0 0 8px;
+  color:white;
+}
+.roue-section p {line-height:1.45}
+.roue-sous-titre {
+  color:#f9b4e3;
+  font-weight:bold;
+}
+.roue-zone {
+  width:min(100%,340px);
+  aspect-ratio:1;
+  margin:15px auto;
+  position:relative;
+}
+.roue-disque {
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  border:7px solid white;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 5px #e90083,
+    0 7px 24px #0008;
+  background:conic-gradient(
+    from 0deg,
+    #e90083 0deg 60deg,
+    #7c25c6 60deg 120deg,
+    #b90077 120deg 180deg,
+    #a544df 180deg 240deg,
+    #e90083 240deg 300deg,
+    #7424b7 300deg 360deg
+  );
+  transition:transform 5s cubic-bezier(.12,.72,.1,1);
+}
+.roue-case {
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:40%;
+  height:26px;
+  transform-origin:0 50%;
+  color:white;
+  font-size:11px;
+  font-weight:800;
+  text-align:right;
+  line-height:1.1;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  text-shadow:0 1px 3px #0009;
+  pointer-events:none;
+}
+.roue-case span {
+  max-width:88px;
+  display:block;
+  text-align:center;
+}
+.roue-centre {
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:white;
+  border:4px solid #f2acd7;
+  color:#a90075;
+  font-weight:900;
+  font-size:13px;
+  z-index:2;
+}
+.roue-fleche {
+  position:absolute;
+  top:-7px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  width:0;
+  height:0;
+  border-left:16px solid transparent;
+  border-right:16px solid transparent;
+  border-top:34px solid white;
+  filter:drop-shadow(0 2px 2px #0007);
+}
+.roue-email {
+  display:block;
+  margin:12px auto;
+  width:100%;
+  max-width:340px;
+  padding:14px;
+  border:2px solid #e5c2e6;
+  border-radius:12px;
+  font-size:16px;
+}
+.roue-bouton {
+  display:block;
+  width:100%;
+  max-width:340px;
+  margin:12px auto;
+  padding:16px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(90deg,#9418ce,#e90083);
+  color:white;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.roue-bouton:disabled {
+  opacity:.5;
+  cursor:not-allowed;
+}
+.roue-resultat {
+  background:#392449;
+  border:1px solid #bc70ba;
+  border-radius:12px;
+  padding:14px;
+  margin:12px auto;
+  max-width:360px;
+  font-weight:bold;
+}
+.roue-resultat[hidden] {display:none}
+.roue-note {
+  font-size:11px;
+  color:#d7c5db;
+}
+</style>
+</head>
+
+<body>
+
+<header id="accueil">
+  <img src="logo-btmakers.png" alt="BTMAKERS">
+  <h1>BTMAKERS</h1>
+  <p>Vos idées, nos créations</p>
+</header>
+
+<div class="ligne"></div>
+
+<main>
+
+<!-- ROUE BTMAKERS -->
+
+<section class="roue-section" aria-labelledby="titre-roue">
+
+  <h2 id="titre-roue">🎡 La roue de la chance</h2>
+
+  <p class="roue-sous-titre">
+    1 tour gratuit • 6 récompenses possibles
+  </p>
+
+  <div class="roue-zone" aria-label="Roue BTMAKERS">
+
+    <div id="roue-disque" class="roue-disque">
+
+      <div class="roue-case"
+        style="transform:rotate(-60deg) translateX(13px)">
+        <span>-5 %</span>
+      </div>
+
+      <div class="roue-case"
+        style="transform:rotate(0deg) translateX(13px)">
+        <span>-10 %</span>
+      </div>
+
+      <div class="roue-case"
+        style="transform:rotate(60deg) translateX(13px)">
+        <span>-15 %</span>
+      </div>
+
+      <div class="roue-case"
+        style="transform:rotate(120deg) translateX(13px)">
+        <span>-20 %</span>
+      </div>
+
+      <div class="roue-case"
+        style="transform:rotate(180deg) translateX(13px)">
+        <span>6 stickers</span>
+      </div>
+
+      <div class="roue-case"
+        style="transform:rotate(240deg) translateX(13px)">
+        <span>Livraison offerte</span>
+      </div>
+
+    </div>
+
+    <div class="roue-fleche"></div>
+    <div class="roue-centre">BTM</div>
+
+  </div>
+
+  <label for="roue-email">
+    Votre adresse e-mail
+  </label>
+
+  <input
+    id="roue-email"
+    class="roue-email"
+    type="email"
+    placeholder="exemple@email.fr"
+    autocomplete="email"
+    required
+  >
+
+  <div style="display:flex;justify-content:center;margin:14px 0" id="roue-turnstile"></div>
+
+  <label style="display:flex;gap:9px;text-align:left;max-width:340px;margin:12px auto;font-size:13px;line-height:1.4">
+    <input type="checkbox" id="roue-consentement" style="align-self:flex-start;margin-top:3px">
+    <span>J’accepte de recevoir des offres commerciales de BTMAKERS par e-mail (facultatif). Je peux retirer mon consentement à tout moment.</span>
+  </label>
+
+  <button
+    id="roue-lancer"
+    class="roue-bouton"
+    type="button">
+    🎁 TOURNER LA ROUE
+  </button>
+
+  <div
+    id="roue-resultat"
+    class="roue-resultat"
+    role="status"
+    aria-live="polite"
+    hidden>
+  </div>
+
+  <p class="roue-note">
+    Version de test : le gain est enregistré dans Supabase,
+    mais aucun code promo Shopify ni e-mail automatique n’est encore envoyé.
+    Une participation par adresse e-mail ; vérification de l’adresse non activée.
+  </p>
+
+</section>
+
+<!-- ACCUEIL -->
+
+<section class="intro">
+  <h2>Bienvenue chez BTMAKERS</h2>
+  <p>
+    Mugs, t-shirts, stickers, magnets
+    et cadeaux personnalisés.
+  </p>
+  <a href="#catalogue" class="bouton">
+    Découvrir nos produits ↓
+  </a>
+</section>
+
+<!-- CATALOGUE -->
+
+<section id="catalogue">
+  <h2>🛍️ Notre catalogue</h2>
+  <p class="description">
+    Découvrez nos différentes créations.
+  </p>
+
+  <div class="grille">
+
+    <article class="carte">
+      <div class="illustration">
+        <img
+          src="mug-btmakers.png"
+          alt="Mug personnalisé"
+          onerror="this.remove();this.parentElement.textContent='☕'">
+      </div>
+      <div class="contenu">
+        <h3>Mugs personnalisés</h3>
+        <p>Créez un mug unique.</p>
+        <a class="bouton" href="personnaliser-mug.html">
+          Personnaliser mon mug
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">👕</div>
+      <div class="contenu">
+        <h3>T-shirts</h3>
+        <p>Des créations à votre image.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🎨</div>
+      <div class="contenu">
+        <h3>Stickers</h3>
+        <p>Découvrez nos stickers.</p>
+        <a class="bouton" href="#stickers">
+          Voir les stickers
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🧲</div>
+      <div class="contenu">
+        <h3>Magnets</h3>
+        <p>Des magnets personnalisés.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🔑</div>
+      <div class="contenu">
+        <h3>Porte-clés</h3>
+        <p>Des accessoires uniques.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+    <article class="carte">
+      <div class="illustration">🎁</div>
+      <div class="contenu">
+        <h3>Cadeaux personnalisés</h3>
+        <p>Pour toutes les occasions.</p>
+        <a class="bouton" href="https://www.btmakers.fr">
+          Voir les produits
+        </a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- STICKERS -->
+
+<section class="section" id="stickers">
+  <h2>🎨 Nos stickers</h2>
+  <p class="description">
+    Découvrez nos 6 modèles à la une.
+  </p>
+
+  <div id="stickers-selection"></div>
+
+  <button
+    id="voir-tous"
+    type="button"
+    aria-expanded="false"
+    aria-controls="catalogue-complet">
+    Voir tous les stickers ↓
+  </button>
+
+  <div id="catalogue-complet" hidden>
+    <h2>🛒 Tous nos stickers</h2>
+    <p class="description">
+      Ajoutez vos modèles préférés au panier.
+    </p>
+    <div id="collection-component-1792258001547"></div>
+  </div>
+</section>
+
+<!-- PERSONNALISATION -->
+
+<section class="section" id="personnalisation">
+  <div class="panneau">
+    <h2>✨ Créez votre produit</h2>
+    <p>
+      Vous avez une photo, un prénom ou un design
+      à personnaliser ? Contactez-nous !
+    </p>
+    <a
+      class="bouton"
+      href="mailto:btmakers2026@outlook.fr?subject=Personnalisation%20BTMAKERS">
+      Demander une personnalisation
+    </a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+
+<section class="section" id="contact">
+  <div class="panneau">
+    <h2>📧 Nous contacter</h2>
+    <p>
+      <a href="mailto:btmakers2026@outlook.fr">
+        btmakers2026@outlook.fr
+      </a>
+    </p>
+    <p>
+      <a href="https://www.btmakers.fr">
+        www.btmakers.fr
+      </a>
+    </p>
+  </div>
+</section>
+
+<footer>
+  © 2026 BTMAKERS - Vos idées, nos créations
+</footer>
+
+</main>
+
+<nav class="navigation">
+  <a href="#accueil">🏠<div>Accueil</div></a>
+  <a href="#catalogue">🛍️<div>Catalogue</div></a>
+  <a href="#stickers">🎨<div>Stickers</div></a>
+  <a href="#contact">✉️<div>Contact</div></a>
+</nav>
+
+<script>
+
+/* ROUE : SUPABASE + CLOUDFLARE (PHASE DE TEST) */
+
+(function() {
+  const disque = document.getElementById('roue-disque');
+  const bouton = document.getElementById('roue-lancer');
+  const email = document.getElementById('roue-email');
+  const resultat = document.getElementById('roue-resultat');
+  const consentement = document.getElementById('roue-consentement');
+  const endpoint = 'https://mxrsgmuvghvbzddladny.supabase.co/functions/v1/roue-btmakers';
+  const siteKey = '0x4AAAAAAFafo8ysnuYK3ASl';
+  const cleLocale = 'btmakers_roue_enregistree_2026';
+  let widgetId = null;
+  let enCours = false;
+
+  // Turnstile renvoie un jeton à usage unique. On l'obtient au clic.
+  function chargerTurnstile() {
+    if (!window.turnstile) return;
+    widgetId = window.turnstile.render('#roue-turnstile', {
+      sitekey: siteKey,
+      theme: 'light'
+    });
+  }
+  window.btmakersTurnstileReady = chargerTurnstile;
+
+  const precedent = localStorage.getItem(cleLocale);
+  if (precedent) {
+    bouton.disabled = true;
+    resultat.hidden = false;
+    resultat.textContent = '🎁 Participation déjà enregistrée sur cet appareil : ' + precedent;
+  }
+
+  const segments = {
+    '-5%':0, '-10%':1, '-15%':2, '-20%':3,
+    '6 stickers offerts':4, 'Livraison offerte':5
+  };
+
+  bouton.addEventListener('click', async function () {
+    if (enCours || bouton.disabled) return;
+    if (!email.checkValidity() || !email.value.trim()) {
+      email.reportValidity();
+      if (!email.value.trim()) email.focus();
+      return;
+    }
+    if (!window.turnstile || widgetId === null) {
+      resultat.hidden = false;
+      resultat.textContent = 'La vérification anti-robots n’est pas encore chargée. Réessayez.';
+      return;
+    }
+    const token = window.turnstile.getResponse(widgetId);
+    if (!token) {
+      resultat.hidden = false;
+      resultat.textContent = 'Veuillez effectuer la vérification anti-robots.';
+      return;
+    }
+
+    enCours = true;
+    bouton.disabled = true;
+    resultat.hidden = false;
+    resultat.textContent = 'Vérification de votre participation…';
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({
+          email: email.value.trim(),
+          consentement_marketing: consentement.checked,
+          turnstile_token: token
+        })
+      });
+      const data = await response.json();
+      if (!response.ok || !data.succes) {
+        throw new Error(data.erreur || 'Participation indisponible.');
+      }
+      const segment = segments[data.gain];
+      if (segment === undefined) throw new Error('Gain reçu mais affichage impossible. Contactez BTMAKERS.');
+      const cible = (360 - (segment * 60 + 30)) % 360;
+      disque.style.transform = 'rotate(' + (360 * 6 + cible) + 'deg)';
+      localStorage.setItem(cleLocale, data.gain);
+      email.disabled = true;
+      consentement.disabled = true;
+      resultat.textContent = '🎉 Votre participation est enregistrée ! La roue tourne…';
+      setTimeout(() => {
+        resultat.textContent = '🎉 Bravo ! Vous avez gagné : ' + data.gain + '. Récompense enregistrée en test ; aucun code ni e-mail n’est encore envoyé.';
+      }, 5100);
+    } catch (erreur) {
+      resultat.textContent = '⚠️ ' + (erreur.message || 'Erreur de connexion.');
+      bouton.disabled = false;
+      window.turnstile.reset(widgetId);
+    } finally {
+      enCours = false;
+    }
+  });
+})();
+
+/* SIX STICKERS CHOISIS */
+
+const stickersChoisis=[
+  'lot-de-6-stickers-st-31',
+  'lot-de-6-stickers-st-26',
+  'lot-de-6-stickers-st-21',
+  'lot-de-6-stickers-st-09',
+  'lot-de-6-stickers-st-02',
+  'lot-de-6-stickers-st-16'
+];
+
+const selection=document.getElementById(
+  'stickers-selection'
+);
+
+const cartes=new Map();
+
+stickersChoisis.forEach(function(handle) {
+
+  const numero=handle.split('-').pop().toUpperCase();
+
+  const carte=document.createElement('article');
+  carte.className='sticker';
+
+  const photo=document.createElement('div');
+  photo.className='sticker-photo';
+
+  const placeholder=document.createElement('span');
+  placeholder.className='sticker-placeholder';
+  placeholder.textContent='🎨';
+  photo.appendChild(placeholder);
+
+  const info=document.createElement('div');
+  info.className='sticker-info';
+
+  const titre=document.createElement('h3');
+  titre.textContent='Lot de 6 stickers ST-'+numero;
+
+  const prix=document.createElement('p');
+  prix.className='sticker-prix';
+
+  const achat=document.createElement('div');
+  achat.className='sticker-achat';
+
+  const attente=document.createElement('p');
+  attente.className='attente';
+  attente.textContent='Chargement…';
+  achat.appendChild(attente);
+
+  info.append(titre,prix,achat);
+  carte.append(photo,info);
+  selection.appendChild(carte);
+
+  cartes.set(handle,{
+    photo,
+    titre,
+    prix,
+    achat
+  });
+});
+
+/* VOIR TOUS LES STICKERS */
+
+const boutonTous=document.getElementById('voir-tous');
+
+const catalogueComplet=document.getElementById(
+  'catalogue-complet'
+);
+
+boutonTous.addEventListener('click',function() {
+
+  const ouvrir=catalogueComplet.hidden;
+
+  catalogueComplet.hidden=!ouvrir;
+
+  boutonTous.setAttribute(
+    'aria-expanded',
+    String(ouvrir)
+  );
+
+  boutonTous.textContent=ouvrir
+    ? 'Voir moins de stickers ↑'
+    : 'Voir tous les stickers ↓';
+
+  if(ouvrir) {
+    catalogueComplet.scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
+  }
+});
+
+/* SHOPIFY */
+
+(function() {
+
+  const sdkURL=
+    'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+
+  const domaine='0chexn-mc.myshopify.com';
+
+  const token='89752ee985127238f6dc732f133c4e3b';
+
+  const moneyFormat=
+    '%E2%82%AC%7B%7Bamount_with_comma_separator%7D%7D';
+
+  function secours(handle) {
+
+    const elements=cartes.get(handle);
+
+    if(!elements) return;
+
+    elements.achat.replaceChildren();
+
+    const lien=document.createElement('a');
+
+    lien.className='bouton';
+    lien.href='https://btmakers.fr/products/'+handle;
+    lien.target='_blank';
+    lien.rel='noopener noreferrer';
+    lien.textContent='Voir et acheter ↗';
+
+    elements.achat.appendChild(lien);
+  }
+
+  function afficherInfos(handle,produit) {
+
+    const elements=cartes.get(handle);
+
+    if(!elements || !produit) return;
+
+    if(produit.images && produit.images.length) {
+
+      const image=document.createElement('img');
+
+      image.src=produit.images[0].src;
+      image.alt=produit.title;
+      image.loading='lazy';
+
+      elements.photo.replaceChildren(image);
+    }
+
+    if(produit.title) {
+      elements.titre.textContent=produit.title;
+    }
+
+    if(produit.variants && produit.variants.length) {
+
+      const montant=produit.variants[0].price;
+
+      const valeur=typeof montant==='object'
+        ? montant.amount
+        : montant;
+
+      if(Number.isFinite(Number(valeur))) {
+
+        elements.prix.textContent=
+          new Intl.NumberFormat('fr-FR',{
+            style:'currency',
+            currency:'EUR'
+          }).format(Number(valeur));
+
+      }
+    }
+  }
+
+  /* STYLE DES BOUTONS D'ACHAT */
+
+  function optionsBouton() {
+
+    return {
+
+      product:{
+
+        buttonDestination:'cart',
+
+        contents:{
+          img:false,
+          title:false,
+          price:false,
+          description:false,
+          variantTitle:false,
+          options:false,
+          quantity:false,
+          button:true,
+          buttonWithQuantity:false
+        },
+
+        styles:{
+
+          product:{
+            'margin':'0',
+            'padding':'0',
+            'max-width':'100%',
+            'width':'100%',
+
+            '@media (min-width: 601px)':{
+              'max-width':'100%',
+              'margin-left':'0',
+              'margin-bottom':'0'
+            }
+          },
+
+          button:{
+            'background-color':'#9418ce',
+            'color':'#ffffff',
+            'border-radius':'11px',
+            'font-size':'12px',
+            'font-weight':'bold',
+            'padding':'13px 5px',
+            'width':'100%',
+
+            ':hover':{
+              'background-color':'#e90083'
+            },
+
+            ':focus':{
+              'background-color':'#e90083'
+            }
+          }
+        },
+
+        text:{
+          button:'Ajouter au panier',
+          outOfStock:'Indisponible'
+        }
+      },
+
+      modalProduct:{
+        contents:{
+          img:false,
+          imgWithCarousel:true,
+          button:false,
+          buttonWithQuantity:true
+        }
+      },
+
+      cart:{
+        text:{
+          total:'Sous-total',
+          button:'Passer commande'
+        }
+      },
+
+      toggle:{
+        styles:{
+          toggle:{
+            'background-color':'#800f8f'
+          }
+        }
+      }
+    };
+  }
+
+  /* OPTIONS DU CATALOGUE COMPLET */
+
+  function optionsCollection() {
+
+    return {
+
+      product:{
+
+        styles:{
+
+          product:{
+            '@media (min-width: 601px)':{
+              'max-width':'calc(25% - 20px)',
+              'margin-left':'20px',
+              'margin-bottom':'50px',
+              'width':'calc(25% - 20px)'
+            }
+          },
+
+          button:{
+            'background-color':'#800f8f',
+
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        },
+
+        text:{
+          button:'Ajouter au panier'
+        }
+      },
+
+      productSet:{
+        styles:{
+          products:{
+            '@media (min-width: 601px)':{
+              'margin-left':'-20px'
+            }
+          }
+        }
+      },
+
+      modalProduct:{
+
+        contents:{
+          img:false,
+          imgWithCarousel:true,
+          button:false,
+          buttonWithQuantity:true
+        },
+
+        styles:{
+          button:{
+            'background-color':'#800f8f',
+
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        },
+
+        text:{
+          button:'Ajouter au panier'
+        }
+      },
+
+      option:{},
+
+      cart:{
+
+        styles:{
+          button:{
+            'background-color':'#800f8f',
+
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        },
+
+        text:{
+          total:'Sous-total',
+          button:'Passer commande'
+        }
+      },
+
+      toggle:{
+
+        styles:{
+          toggle:{
+            'background-color':'#800f8f',
+
+            ':hover':{
+              'background-color':'#da1af3'
+            }
+          }
+        }
+      }
+    };
+  }
+
+  function lancer() {
+
+    const client=ShopifyBuy.buildClient({
+      domain:domaine,
+      storefrontAccessToken:token
+    });
+
+    stickersChoisis.forEach(async function(handle) {
+
+      try {
+
+        const produit=
+          await client.product.fetchByHandle(handle);
+
+        if(produit) {
+          afficherInfos(handle,produit);
+        }
+
+      } catch(erreur) {
+
+        console.warn(
+          'Photo ou prix indisponible',
+          handle,
+          erreur
+        );
+      }
+    });
+
+    ShopifyBuy.UI.onReady(client).then(
+      async function(ui) {
+
+        /* CATALOGUE COMPLET */
+
+        try {
+
+          await ui.createComponent('collection',{
+
+            id:'686474854734',
+
+            node:document.getElementById(
+              'collection-component-1792258001547'
+            ),
+
+            moneyFormat:moneyFormat,
+
+            options:optionsCollection()
+
+          });
+
+        } catch(erreur) {
+
+          console.error(
+            'Erreur catalogue complet',
+            erreur
+          );
+        }
+
+        /* SIX BOUTONS SHOPIFY */
+
+        for(const handle of stickersChoisis) {
+
+          const elements=cartes.get(handle);
+
+          if(!elements) continue;
+
+          const zone=elements.achat;
+
+          try {
+
+            await ui.createComponent('product',{
+
+              handle:handle,
+
+              node:zone,
+
+              moneyFormat:moneyFormat,
+
+              options:optionsBouton()
+
+            });
+
+            const attente=zone.querySelector('.attente');
+
+            if(attente) {
+              attente.remove();
+            }
+
+          } catch(erreur) {
+
+            console.error(
+              'Erreur bouton',
+              handle,
+              erreur
+            );
+
+            secours(handle);
+          }
+        }
+
+      }
+    ).catch(function(erreur) {
+
+      console.error(
+        'Erreur Shopify',
+        erreur
+      );
+
+      stickersChoisis.forEach(secours);
+
+    });
+  }
+
+  /* CHARGEMENT DU SDK */
+
+  if(window.ShopifyBuy && window.ShopifyBuy.UI) {
+
+    lancer();
+
+  } else {
+
+    const script=document.createElement('script');
+
+    script.src=sdkURL;
+    script.async=true;
+
+    script.onload=lancer;
+
+    script.onerror=function() {
+
+      console.error(
+        'Impossible de charger Shopify'
+      );
+
+      stickersChoisis.forEach(secours);
+    };
+
+    document.head.appendChild(script);
+  }
+
+})();
+
+</script>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=btmakersTurnstileReady&render=explicit" async defer></script>
+</body>
+</html>
