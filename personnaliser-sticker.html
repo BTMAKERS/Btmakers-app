@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Personnaliser mes stickers | BTMAKERS</title>
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#171717;background:#f7f5f8}*{box-sizing:border-box}body{margin:0}header{background:#151515;color:#fff;padding:18px;text-align:center}header a{color:#fff;text-decoration:none;float:left}h1{font-size:21px;margin:0}main{max-width:650px;margin:auto;padding:18px}h2{font-size:19px}.preview{background:linear-gradient(145deg,#fce6f6,#eee3fb);border-radius:22px;padding:20px;text-align:center}.preview canvas{width:min(100%,360px);height:auto;touch-action:none;display:block;margin:auto;border-radius:12px}.controls{background:#fff;border-radius:18px;padding:18px;margin-top:16px;box-shadow:0 4px 20px #0001}label{display:block;font-weight:700;margin:16px 0 7px}input[type=file],input[type=range],input[type=number]{width:100%;font:inherit}input[type=number]{padding:12px;border:1px solid #ddd;border-radius:10px}input[type=file]{font-size:14px}.shapes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.shapes label{margin:0}.shapes input{position:absolute;opacity:0}.shapes span{display:block;text-align:center;border:2px solid #ddd;border-radius:12px;padding:12px 4px;font-size:14px;cursor:pointer;min-height:58px}.shapes input:checked+span{border-color:#d50087;background:#fff0f9}.shapes input:focus-visible+span{outline:3px solid #7c3aed}button{border:0;background:#191919;color:white;border-radius:12px;padding:13px 16px;font-weight:700;cursor:pointer;min-height:46px}button:disabled{opacity:.45;cursor:not-allowed}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.buttons button{flex:1}.primary{background:linear-gradient(100deg,#9b13db,#f80087,#ff2453)}.hint{font-size:13px;color:#666;line-height:1.5}.status{font-size:14px;font-weight:600;min-height:18px}.error{color:#b00020}.row{display:flex;align-items:center;gap:12px}.row input{flex:1}.price{font-weight:800;font-size:20px}footer{text-align:center;font-size:12px;color:#777;padding:22px}
+</style></head><body>
+<header><a href="index.html" aria-label="Retour à l'accueil">← Retour</a><h1>BTMAKERS · Mes stickers</h1></header>
+<main><h2>Créez vos stickers personnalisés</h2><div class="preview"><canvas id="preview" width="600" height="600" aria-label="Aperçu du sticker"></canvas><p class="hint">Aperçu indicatif. Faites glisser votre image pour la déplacer. Pour une découpe à la forme, privilégiez un PNG à fond transparent.</p></div>
+<div class="controls"><label for="photo">Votre image</label><input id="photo" type="file" accept="image/png,image/jpeg,image/webp,image/*"><label>Forme du sticker</label><div class="shapes"><label><input type="radio" name="shape" value="rond" checked><span>⭕ Rond</span></label><label><input type="radio" name="shape" value="carre"><span>◼ Carré</span></label><label><input type="radio" name="shape" value="forme"><span>✂️ À la forme</span></label></div>
+<label for="zoom">Taille de l'image</label><div class="row"><span>−</span><input id="zoom" type="range" min="50" max="220" value="100"><span>+</span></div><div class="buttons"><button type="button" id="reset">Recentrer l'image</button><button type="button" id="remove">Retirer l'image</button></div>
+<label for="quantity">Quantité de stickers</label><input id="quantity" type="number" min="1" max="500" step="1" value="1"><p class="price" id="price">Total : 0,50 €</p>
+<div class="buttons"><button type="button" id="download">Enregistrer l'aperçu</button><button type="button" class="primary" id="addCart" disabled>🛒 Ajouter au panier</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="hint">Le fichier est enregistré dans un espace privé BTMAKERS lors de l'ajout au panier. Le contour à la forme reste indicatif : BTMAKERS vérifie le fichier et prépare la découpe avant fabrication.</p></div></main><footer>BTMAKERS — Unique, comme vous</footer>
+<script>
+const $=id=>document.getElementById(id);
+const canvas=$('preview'),ctx=canvas.getContext('2d'),FUNC='https://mxrsgmuvghvbzddladny.supabase.co/functions/v1/enregistrer-sticker',VARIANT='61259788747086';
+let image=null,dx=0,dy=0,drag=false,last=null,busy=false,transparent=false;
+const shape=()=>document.querySelector('input[name="shape"]:checked').value;
+function status(s,err=false){$('status').textContent=s;$('status').className='status'+(err?' error':'')}
+function update(){const q=Number($('quantity').value);$('price').textContent='Total : '+(Number.isInteger(q)&&q>0?q*.5:0).toLocaleString('fr-FR',{style:'currency',currency:'EUR'});$('addCart').disabled=busy||!image;draw()}
+function baseDraw(c,w,h,forExport=false){
+ const g=c.getContext('2d');g.clearRect(0,0,w,h);const s=w/600;g.save();g.scale(s,s);
+ if(!forExport){g.fillStyle='#f4f4f4';g.fillRect(0,0,600,600)}
+ if(!image){g.fillStyle='#777';g.textAlign='center';g.font='bold 22px Arial';g.fillText('Ajoutez votre image',300,300);g.restore();return}
+ const kind=shape(),pad=kind==='forme'?36:40;
+ if(kind!=='forme'){
+  g.save();g.beginPath();if(kind==='rond')g.arc(300,300,255,0,Math.PI*2);else g.rect(45,45,510,510);g.clip();g.fillStyle='#fff';g.fillRect(0,0,600,600);
+  drawImage(g);g.restore();g.strokeStyle='#fff';g.lineWidth=12;g.beginPath();if(kind==='rond')g.arc(300,300,260,0,Math.PI*2);else g.rect(40,40,520,520);g.stroke();
+ }else{
+  // Transparent PNG: white silhouette border via shadow around the actual alpha.
+  // Opaque files cannot provide an automatic silhouette; show their rectangle.
+  const off=document.createElement('canvas');off.width=600;off.height=600;const o=off.getContext('2d');drawImage(o);
+  g.save();g.shadowColor='#fff';g.shadowBlur=0;
+  for(let x=-10;x<=10;x+=2){for(let y=-10;y<=10;y+=2){if(x*x+y*y<=100)g.drawImage(off,x,y)}}
+  g.drawImage(off,0,0);g.restore();
+ }
+ g.restore();
+}
+function drawImage(g){const zoom=Number($('zoom').value)/100,fit=440/Math.max(image.naturalWidth,image.naturalHeight),w=image.naturalWidth*fit*zoom,h=image.naturalHeight*fit*zoom;g.drawImage(image,300-w/2+dx,300-h/2+dy,w,h)}
+function draw(){baseDraw(canvas,600,600)}
+function exportCanvas(){const c=document.createElement('canvas');c.width=1200;c.height=1200;baseDraw(c,1200,1200,true);return c}
+function toBlob(c){return new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(Error('Impossible de créer le PNG')),'image/png'))}
+$('photo').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;if(!f.type.startsWith('image/')){status('Choisissez une image valide.',true);return}const url=URL.createObjectURL(f),im=new Image();im.onload=()=>{image=im;dx=dy=0;$('zoom').value=100;URL.revokeObjectURL(url);status('');update()};im.onerror=()=>{URL.revokeObjectURL(url);status('Impossible de lire cette image.',true)};im.src=url});
+document.querySelectorAll('input[name="shape"]').forEach(el=>el.addEventListener('change',()=>{if(shape()==='forme')status('La découpe à la forme suit les zones non transparentes de votre image. Avec un fond opaque, elle sera rectangulaire.');else status('');update()}));
+$('zoom').addEventListener('input',update);$('quantity').addEventListener('input',update);$('reset').addEventListener('click',()=>{dx=dy=0;$('zoom').value=100;update()});$('remove').addEventListener('click',()=>{image=null;$('photo').value='';dx=dy=0;status('');update()});
+canvas.addEventListener('pointerdown',e=>{if(!image)return;drag=true;last={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId)});
+canvas.addEventListener('pointermove',e=>{if(!drag)return;const box=canvas.getBoundingClientRect();dx+=(e.clientX-last.x)*600/box.width;dy+=(e.clientY-last.y)*600/box.height;last={x:e.clientX,y:e.clientY};draw()});
+canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
+$('download').addEventListener('click',async()=>{if(!image){status('Ajoutez une image.',true);return}try{const blob=await toBlob(exportCanvas()),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='sticker-btmakers.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}catch(e){status(e.message,true)}});
+$('addCart').addEventListener('click',async()=>{if(busy||!image)return;const q=Number($('quantity').value);if(!Number.isInteger(q)||q<1||q>500){status('Choisissez une quantité entre 1 et 500.',true);return}busy=true;update();status('Enregistrement de votre sticker…');try{
+ const blob=await toBlob(exportCanvas());if(blob.size>5*1024*1024)throw Error('Image trop volumineuse : 5 Mo maximum.');const fd=new FormData();fd.append('design',blob,'sticker-btmakers.png');const r=await fetch(FUNC,{method:'POST',body:fd});const data=await r.json().catch(()=>({}));if(!r.ok||!data.success||!data.design_id)throw Error(data.error||'Enregistrement impossible.');
+ const form=document.createElement('form');form.method='POST';form.action='https://btmakers.fr/cart/add';form.style.display='none';const field=(name,val)=>{const el=document.createElement('input');el.type='hidden';el.name=name;el.value=String(val);form.appendChild(el)};field('id',VARIANT);field('quantity',q);field('properties[Référence design BTMAKERS]',data.design_id);field('properties[Forme du sticker]',shape()==='rond'?'Rond':shape()==='carre'?'Carré':'À la forme (bordure blanche)');field('return_to','/cart');document.body.appendChild(form);status('Sticker enregistré ! Ouverture du panier…');form.submit();
+ }catch(e){status(e.message||'Une erreur est survenue.',true);busy=false;update()}});
+update();
+</script></body></html>
