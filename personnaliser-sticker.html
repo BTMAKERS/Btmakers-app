@@ -8,10 +8,10 @@
 <div class="controls"><label for="photo">Votre image</label><input id="photo" type="file" accept="image/png,image/jpeg,image/webp,image/*"><label>Forme du sticker</label><div class="shapes"><label><input type="radio" name="shape" value="rond" checked><span>⭕ Rond</span></label><label><input type="radio" name="shape" value="carre"><span>◼ Carré</span></label><label><input type="radio" name="shape" value="forme"><span>✂️ À la forme</span></label></div>
 <label for="zoom">Taille de l'image</label><div class="row"><span>−</span><input id="zoom" type="range" min="50" max="220" value="100"><span>+</span></div><div class="buttons"><button type="button" id="reset">Recentrer l'image</button><button type="button" id="remove">Retirer l'image</button></div>
 <label for="quantity">Quantité de stickers</label><input id="quantity" type="number" min="1" max="500" step="1" value="1"><p class="price" id="price">Total : 0,50 €</p>
-<div class="buttons"><button type="button" id="download">Enregistrer l'aperçu</button><button type="button" class="primary" id="addCart" disabled>🛒 Ajouter au panier</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="hint">Le fichier est enregistré dans un espace privé BTMAKERS lors de l'ajout au panier. Le contour à la forme reste indicatif : BTMAKERS vérifie le fichier et prépare la découpe avant fabrication.</p></div></main><footer>BTMAKERS — Unique, comme vous</footer>
+<div class="buttons"><button type="button" id="download">Enregistrer l'aperçu</button><button type="button" class="primary" id="addCart" disabled>🛒 Ajouter au panier</button></div><div class="buttons"><button type="button" id="checkout" class="primary" hidden>💳 Passer commande sur Shopify</button></div><p id="status" class="status" role="status" aria-live="polite"></p><p class="hint">Le fichier est enregistré dans un espace privé BTMAKERS lors de l'ajout au panier. Le contour à la forme reste indicatif : BTMAKERS vérifie le fichier et prépare la découpe avant fabrication.</p></div></main><footer>BTMAKERS — Unique, comme vous</footer>
 <script>
 const $=id=>document.getElementById(id);
-const canvas=$('preview'),ctx=canvas.getContext('2d'),FUNC='https://mxrsgmuvghvbzddladny.supabase.co/functions/v1/enregistrer-sticker',VARIANT='61259788747086';
+const canvas=$('preview'),ctx=canvas.getContext('2d'),FUNC='https://mxrsgmuvghvbzddladny.supabase.co/functions/v1/enregistrer-sticker',VARIANT='gid://shopify/ProductVariant/61259788747086',SHOP='0chexn-mc.myshopify.com',TOKEN='89752ee985127238f6dc732f133c4e3b';
 let image=null,dx=0,dy=0,drag=false,last=null,busy=false,transparent=false;
 const shape=()=>document.querySelector('input[name="shape"]:checked').value;
 function status(s,err=false){$('status').textContent=s;$('status').className='status'+(err?' error':'')}
@@ -45,9 +45,54 @@ canvas.addEventListener('pointerdown',e=>{if(!image)return;drag=true;last={x:e.c
 canvas.addEventListener('pointermove',e=>{if(!drag)return;const box=canvas.getBoundingClientRect();dx+=(e.clientX-last.x)*600/box.width;dy+=(e.clientY-last.y)*600/box.height;last={x:e.clientX,y:e.clientY};draw()});
 canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
 $('download').addEventListener('click',async()=>{if(!image){status('Ajoutez une image.',true);return}try{const blob=await toBlob(exportCanvas()),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='sticker-btmakers.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}catch(e){status(e.message,true)}});
-$('addCart').addEventListener('click',async()=>{if(busy||!image)return;const q=Number($('quantity').value);if(!Number.isInteger(q)||q<1||q>500){status('Choisissez une quantité entre 1 et 500.',true);return}busy=true;update();status('Enregistrement de votre sticker…');try{
- const blob=await toBlob(exportCanvas());if(blob.size>5*1024*1024)throw Error('Image trop volumineuse : 5 Mo maximum.');const fd=new FormData();fd.append('design',blob,'sticker-btmakers.png');const r=await fetch(FUNC,{method:'POST',body:fd});const data=await r.json().catch(()=>({}));if(!r.ok||!data.success||!data.design_id)throw Error(data.error||'Enregistrement impossible.');
- const form=document.createElement('form');form.method='POST';form.action='https://btmakers.fr/cart/add';form.style.display='none';const field=(name,val)=>{const el=document.createElement('input');el.type='hidden';el.name=name;el.value=String(val);form.appendChild(el)};field('id',VARIANT);field('quantity',q);field('properties[Référence design BTMAKERS]',data.design_id);field('properties[Forme du sticker]',shape()==='rond'?'Rond':shape()==='carre'?'Carré':'À la forme (bordure blanche)');field('return_to','/cart');document.body.appendChild(form);status('Sticker enregistré ! Ouverture du panier…');form.submit();
- }catch(e){status(e.message||'Une erreur est survenue.',true);busy=false;update()}});
+// Panier Shopify Storefront API, distinct du panier des boutons Buy Button de l'accueil.
+const API=`https://${SHOP}/api/2025-10/graphql.json`;
+const CART_KEY='btmakers_stickers_cart_id';
+let checkoutUrl='';
+async function shopify(query,variables){
+ const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Storefront-Access-Token':TOKEN},body:JSON.stringify({query,variables})});
+ const data=await res.json();
+ if(!res.ok||data.errors?.length)throw Error(data.errors?.[0]?.message||'Erreur de connexion à Shopify');
+ return data.data;
+}
+const cartFields='id checkoutUrl lines(first:10){nodes{id quantity}}';
+async function addStickerToCart(quantity,attributes){
+ const line={merchandiseId:VARIANT,quantity,attributes};
+ let id=localStorage.getItem(CART_KEY);
+ if(id){
+  try{
+   const data=await shopify(`mutation($cartId:ID!,$lines:[CartLineInput!]!){cartLinesAdd(cartId:$cartId,lines:$lines){cart{${cartFields}} userErrors{message}}}`,{cartId:id,lines:[line]});
+   const result=data.cartLinesAdd;
+   if(!result.userErrors?.length&&result.cart)return result.cart;
+  }catch(e){console.warn('Ancien panier inaccessible',e)}
+ }
+ const data=await shopify(`mutation($input:CartInput!){cartCreate(input:$input){cart{${cartFields}} userErrors{message}}}`,{input:{lines:[line]}});
+ const result=data.cartCreate;
+ if(result.userErrors?.length||!result.cart)throw Error(result.userErrors?.[0]?.message||'Impossible de créer le panier');
+ localStorage.setItem(CART_KEY,result.cart.id);
+ return result.cart;
+}
+$('checkout').addEventListener('click',()=>{if(checkoutUrl)window.location.assign(checkoutUrl)});
+$('addCart').addEventListener('click',async()=>{
+ if(busy||!image)return;
+ const q=Number($('quantity').value);
+ if(!Number.isInteger(q)||q<1||q>500){status('Choisissez une quantité entre 1 et 500.',true);return}
+ busy=true;update();status('Enregistrement de votre sticker…');
+ try{
+  const blob=await toBlob(exportCanvas());
+  if(blob.size>5*1024*1024)throw Error('Image trop volumineuse : 5 Mo maximum.');
+  const fd=new FormData();fd.append('design',blob,'sticker-btmakers.png');
+  const r=await fetch(FUNC,{method:'POST',body:fd});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok||!data.success||!data.design_id)throw Error(data.error||'Enregistrement impossible.');
+  const forme=shape()==='rond'?'Rond':shape()==='carre'?'Carré':'À la forme (bordure blanche)';
+  status('Création enregistrée. Ajout au panier Shopify…');
+  const cart=await addStickerToCart(q,[{key:'Référence design BTMAKERS',value:data.design_id},{key:'Forme du sticker',value:forme}]);
+  checkoutUrl=cart.checkoutUrl;
+  $('checkout').hidden=false;
+  status(`${q} sticker(s) ajouté(s) au panier Shopify. Cliquez sur « Passer commande » pour payer.`);
+ }catch(e){status(e.message||'Une erreur est survenue.',true)}
+ finally{busy=false;update()}
+});
 update();
 </script></body></html>
