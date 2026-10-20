@@ -925,18 +925,21 @@ boutonTous.addEventListener('click',function() {
             if(Number.isFinite(Number(montant))) prix.textContent=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(Number(montant));
             const achat=document.createElement('div');
             achat.className='mug-achat';
+            achat.innerHTML='<p class="attente">Chargement du bouton…</p>';
             info.append(titre,prix,achat);
             carte.append(photo,info);
             mugsCarrousel.appendChild(carte);
             try{
               await ui.createComponent('product',{
-                id:produit.id,
+                handle:produit.handle,
                 node:achat,
                 moneyFormat:moneyFormat,
                 options:optionsBouton()
               });
+              achat.querySelector('.attente')?.remove();
             }catch(err){
               console.error('Bouton achat mug',err);
+              achat.replaceChildren();
               const lien=document.createElement('a');
               lien.className='bouton';
               lien.href='https://btmakers.fr/products/'+produit.handle;
