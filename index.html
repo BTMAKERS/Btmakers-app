@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -255,6 +254,21 @@ footer {
   }
 }
 
+
+/* CARROUSEL MUGS */
+.mugs-entete{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mugs-actions{display:flex;gap:8px}
+.mugs-fleche{border:0;background:#9418ce;color:#fff;border-radius:50%;width:40px;height:40px;font-size:22px;cursor:pointer}
+.mugs-defilement{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:8px 2px 18px;scrollbar-width:thin}
+.mug-carte{flex:0 0 min(72vw,230px);scroll-snap-align:start;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 14px #00000012;min-width:0}
+.mug-photo{aspect-ratio:1;background:#f7edf9;display:flex;align-items:center;justify-content:center;font-size:48px}
+.mug-photo img{width:100%;height:100%;object-fit:contain}
+.mug-info{padding:12px}
+.mug-info h3{font-size:14px;line-height:1.4;min-height:40px;margin:0 0 8px}
+.mug-prix{font-size:18px;color:#9418ce;font-weight:bold;margin:0 0 10px}
+.mug-achat{min-height:44px}
+.mug-achat .shopify-buy-frame,.mug-achat iframe{max-width:100%!important;width:100%!important}
+
 </style>
 </head>
 
@@ -367,6 +381,21 @@ footer {
   </div>
 </section>
 
+<!-- MUGS SHOPIFY -->
+<section class="section" id="mugs">
+  <div class="mugs-entete">
+    <h2>☕ Nos mugs</h2>
+    <div class="mugs-actions">
+      <button type="button" class="mugs-fleche" id="mugs-precedent" aria-label="Mugs précédents">‹</button>
+      <button type="button" class="mugs-fleche" id="mugs-suivant" aria-label="Mugs suivants">›</button>
+    </div>
+  </div>
+  <p class="description">Faites défiler les mugs et ajoutez-les directement à votre panier.</p>
+  <div id="mugs-carrousel" class="mugs-defilement" aria-label="Collection de mugs BTMAKERS">
+    <p class="attente">Chargement des mugs…</p>
+  </div>
+</section>
+
 <!-- STICKERS -->
 
 <section class="section" id="stickers">
@@ -443,6 +472,16 @@ footer {
 </nav>
 
 <script>
+
+
+/* CARROUSEL MUGS - MÊME PANIER SHOPIFY QUE LES STICKERS */
+const mugsCarrousel=document.getElementById('mugs-carrousel');
+for(const [id,sens] of [['mugs-precedent',-1],['mugs-suivant',1]]){
+  document.getElementById(id).addEventListener('click',()=>{
+    const carte=mugsCarrousel.querySelector('.mug-carte');
+    mugsCarrousel.scrollBy({left:sens*((carte?.getBoundingClientRect().width||230)+14),behavior:'smooth'});
+  });
+}
 
 /* SIX STICKERS CHOISIS */
 
@@ -857,6 +896,64 @@ boutonTous.addEventListener('click',function() {
           );
         }
 
+        /* MUGS : COLLECTION SHOPIFY DYNAMIQUE */
+        try {
+          const collectionMugs=await client.collection.fetchByHandle('notre-collection-de-mug');
+          const produits=collectionMugs?.products || [];
+          mugsCarrousel.replaceChildren();
+          if(!produits.length) throw new Error('Aucun mug accessible via Shopify Buy SDK');
+          for(const produit of produits){
+            const carte=document.createElement('article');
+            carte.className='mug-carte';
+            const photo=document.createElement('div');
+            photo.className='mug-photo';
+            if(produit.images?.length){
+              const img=document.createElement('img');
+              img.src=produit.images[0].src;
+              img.alt=produit.title;
+              img.loading='lazy';
+              photo.appendChild(img);
+            }else photo.textContent='☕';
+            const info=document.createElement('div');
+            info.className='mug-info';
+            const titre=document.createElement('h3');
+            titre.textContent=produit.title;
+            const prix=document.createElement('p');
+            prix.className='mug-prix';
+            const brut=produit.variants?.[0]?.price;
+            const montant=typeof brut==='object'?brut?.amount:brut;
+            if(Number.isFinite(Number(montant))) prix.textContent=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(Number(montant));
+            const achat=document.createElement('div');
+            achat.className='mug-achat';
+            info.append(titre,prix,achat);
+            carte.append(photo,info);
+            mugsCarrousel.appendChild(carte);
+            try{
+              await ui.createComponent('product',{
+                id:produit.id,
+                node:achat,
+                moneyFormat:moneyFormat,
+                options:optionsBouton()
+              });
+            }catch(err){
+              console.error('Bouton achat mug',err);
+              const lien=document.createElement('a');
+              lien.className='bouton';
+              lien.href='https://btmakers.fr/products/'+produit.handle;
+              lien.textContent='Voir ce mug';
+              achat.appendChild(lien);
+            }
+          }
+        }catch(erreur){
+          console.error('Collection mugs Shopify',erreur);
+          mugsCarrousel.replaceChildren();
+          const lien=document.createElement('a');
+          lien.className='bouton';
+          lien.href='https://btmakers.fr/collections/notre-collection-de-mug';
+          lien.textContent='Voir notre collection de mugs';
+          mugsCarrousel.appendChild(lien);
+        }
+
         /* SIX BOUTONS SHOPIFY */
 
         for(const handle of stickersChoisis) {
@@ -908,6 +1005,7 @@ boutonTous.addEventListener('click',function() {
       );
 
       stickersChoisis.forEach(secours);
+      mugsCarrousel.innerHTML='<a class="bouton" href="https://btmakers.fr/collections/notre-collection-de-mug">Voir nos mugs</a>';
 
     });
   }
@@ -934,6 +1032,7 @@ boutonTous.addEventListener('click',function() {
       );
 
       stickersChoisis.forEach(secours);
+      mugsCarrousel.innerHTML='<a class="bouton" href="https://btmakers.fr/collections/notre-collection-de-mug">Voir nos mugs</a>';
     };
 
     document.head.appendChild(script);
