@@ -248,11 +248,9 @@ footer {
   margin:35px 0 10px;
 }
 @media(min-width:650px) {
-  .grille {grid-template-columns:repeat(3,1fr)}
-  #stickers-selection {
-.grille {grid-template-columns:repeat(2,1fr)}
+  .grille {grid-template-columns:repeat(2,minmax(0,1fr))}
+  #stickers-selection {grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-
 
 /* CARROUSEL MUGS */
 .mugs-entete{display:flex;align-items:center;justify-content:space-between;gap:12px}
